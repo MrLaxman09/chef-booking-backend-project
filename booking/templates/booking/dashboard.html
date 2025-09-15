@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Main Page</title>
+  <style>
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .left {
+      width: 20%;
+      border-right: 2px solid #ccc;
+    }
+    .right {
+      flex: 1;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+  <!-- Left Frame -->
+  <div class="left">
+    <!-- yahan template file nahi, named url use karo -->
+    <iframe src="{% url 'view_bookings' %}" title="View bookings"></iframe>
+    {% comment %} <!-- agar urls me app namespace use hua hai to:  {% url 'booking:view_bookings' %} --> {% endcomment %}
+  </div>
+
+  <!-- Right Frame -->
+  <div class="right">
+    <iframe src="{% url 'my_bookings' %}" name="xyz" title="My bookings"></iframe>
+    {% comment %} <!-- namespaced ho to: {% url 'booking:my_bookings' %} --> {% endcomment %}
+  </div>
+</div>
+
+</body>
+</html>

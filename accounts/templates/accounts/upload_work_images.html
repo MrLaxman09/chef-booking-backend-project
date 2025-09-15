@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Upload Work Images{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4">🖼️ Upload Your Work Images</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+    <div class="row g-4">
+      {% for form in formset %}
+        <div class="col-md-4">
+          <div class="card shadow-sm p-3">
+            {{ form.image.label_tag }}<br>
+            {{ form.image }}
+            {% if form.instance.image %}
+              <img src="{{ form.instance.image.url }}" class="img-fluid mt-2" alt="work image">
+            {% endif %}
+            {% if form.DELETE %}
+              <div class="form-check mt-2">
+                {{ form.DELETE }} <label class="form-check-label">Delete</label>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Upload</button>
+  </form>
+</div>
+{% endblock %}

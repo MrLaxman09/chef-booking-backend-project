@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Gradient Background -->
+<div class="py-5" style="background: linear-gradient(to right, #f8f9fa, #e0f7fa); min-height: 100vh;">
+  <div class="container">
+    <!-- Review Card -->
+    <div class="card shadow-lg border-0 mx-auto" style="max-width: 600px;">
+      <div class="card-body">
+        <!-- Header -->
+        <h2 class="text-center mb-4" style="color: #007bff;">
+          📝 Leave a Review
+        </h2>
+
+        <!-- Form -->
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary px-4 py-2">
+              🚀 Submit Review
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Thank You Note (Optional) -->
+    <div class="text-center mt-5 text-muted">
+      <p>We value your feedback—it helps us serve you better! 💬</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

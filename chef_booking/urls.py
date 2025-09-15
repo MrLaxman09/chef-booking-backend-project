@@ -1,0 +1,53 @@
+from django.contrib import admin
+from django.urls import path, include
+from booking import views as booking_views
+from accounts import views as accounts_views
+from review import views as review_views
+from django.conf import settings
+from django.conf.urls.static import static
+urlpatterns = [
+    path('admin/', admin.site.urls),
+
+
+    # Home and Chef Pages
+    path('', booking_views.home, name='home'),
+    path('about/', booking_views.about, name='about'),
+    path('blog/', booking_views.blog_list, name='blog_list'),
+    path('<int:pk>/', booking_views.blog_detail, name='blog_detail'),
+    
+    
+    
+    
+    path('chefs/', booking_views.chef_list, name='chef_list'),
+    path('dashboard/', booking_views.dashboard, name='dashboard'),
+    path('book/<int:chef_id>/', booking_views.book_chef, name='book_chef'),
+
+    # Booking and Chef Actions
+    path('become-chef/', booking_views.become_chef, name='become_chef'),
+    path('my-bookings/', booking_views.my_bookings, name='my_bookings'),
+    path('view-bookings/', booking_views.view_bookings, name='view_bookings'),
+    path('update-booking/<int:booking_id>/<str:status>/', booking_views.update_booking_status, name='update_booking_status'),
+
+
+    # User Auth
+    path('accounts/', include('django.contrib.auth.urls')),  # Login, logout, password reset
+    path('signup/', accounts_views.signup, name='signup'),
+    path('user_profile/', booking_views.user_profile, name='user_profile'),
+    path('profile/edit/', accounts_views.edit_profile, name='edit_profile'),
+    path('profile/<str:username>/', accounts_views.profile_detail, name='profile_detail'),
+    # path('profile/<str:username>/', accounts_views.profile_detail, name='profile_detail'),
+    path('profile/<str:username>/<int:booking_id>/<int:review_id>/', accounts_views.profile_detail, name='profile_detail_with_review'),
+
+    path('profile/<str:username>/upload-images/', accounts_views.upload_work_images, name='upload_work_images'),
+
+    
+     # review users 
+    path('review/<int:booking_id>/submit/', review_views.submit_review, name='submit_review'),
+    path('my-bookings/review/<int:review_id>/', review_views.view_review, name='view_review'),
+    # path('profile/<str:username>/review/<int:review_id>/', review_views.view_review, name='view_review'),
+]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+

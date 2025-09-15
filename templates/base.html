@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Chef Booking{% endblock %}</title>
+    <!-- Bootstrap 5 CDN -->
+    <!-- in your base.html inside <head> -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+      .background-img {
+        background-color: #1e2136;
+      }
+      {% comment %} .home{
+          background: url("https://static.wixstatic.com/media/623a24_ad26f6ba7a474830be3a88b985c86a8e~mv2.png/v1/fill/w_1901,h_1000,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/623a24_ad26f6ba7a474830be3a88b985c86a8e~mv2.png")
+        no-repeat center center;
+        background-size: cover;
+        color: white;
+        min-height: 70vh;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+      } {% endcomment %}
+      .testimonial-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .testimonial-card:hover {
+        cursor: pointer;
+        transform: translateY(-10px);
+        box-shadow: 0 20px 30px rgba(240, 15, 15, 0.15);
+      } 
+      .gradient-navbar {
+        background: linear-gradient(90deg, #0f5132, #031633, #212529);
+        transition: background 0.4s ease, box-shadow 0.3s ease;
+      }
+      body,
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h6,
+      a,
+      span,
+      li,
+      td,
+      span,
+      input,
+      label,
+      h5{
+        text-shadow: none !important;
+      }
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .animated-bounce {
+        animation: bounceIn 0.6s ease-out;
+      }
+      {% comment %} .navbar {
+        animation: fadeInDown 0.8s ease-in-out;
+      } {% endcomment %}
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease;
+      }
+      .btn:hover {
+        animation: pulse 0.6s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .container-md{
+        width : 100%%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <script>
+    window.addEventListener("scroll", function () {
+      const navbar = document.getElementById("mainNavbar");
+      if (window.scrollY > 50) {
+        navbar.classList.add("gradient-navbar", "shadow");
+        navbar.classList.remove("bg-transparent");
+      } else {
+        navbar.classList.remove("gradient-navbar", "shadow");
+        navbar.classList.add("bg-transparent");
+      }
+    });
+  </script>
+
+  <body>
+    <!-- Navbar -->
+    <!-- Stylish Navbar using Bootstrap 5 -->
+    <div class="background-img">
+      <nav
+        id="mainNavbar"
+        class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top"
+      >
+        <div class="container">
+          <a
+            class="navbar-brand fw-bold fs-4 text-warning"
+            href="{% url 'home' %}"
+          >
+            🍽️ ChefBooking
+          </a>
+
+          <button
+            class="navbar-toggler animated-bounce"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#nb"
+            aria-controls="nb"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="nb">
+            <ul class="navbar-nav ms-auto align-items-center gap-2">
+              <li class="nav-item">
+                <a
+                  href="{% url 'home' %}"
+                  class="nav-link custom-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  href="{% url 'blog_list' %}"
+                  class="nav-link custom-link {% if request.resolver_match.url_name == 'blog_list' %}active{% endif %}" 
+                  >Blog</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  href="{% url 'about' %}"
+                  class="nav-link custom-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" 
+                  >About</a
+                >
+              </li>
+             
+              {% if user.is_authenticated %}
+               <li class="nav-item">
+                <a
+                  href="{% url 'chef_list' %}"
+                  class="nav-link custom-link {% if request.resolver_match.url_name == 'chef_list' %}active{% endif %}" 
+                  ><i class="bi bi-egg-fried me-1"></i> Chefs</a
+                >
+              </li>
+              {% comment %} <li class="nav-item">
+                <a
+                  href="{% url 'my_bookings' %}"
+                  class="nav-link custom-link {% if request.resolver_match.url_name == 'my_bookings' %}active{% endif %}"
+                  >My Bookings</a
+                >
+              </li> {% endcomment %}
+
+              {% comment %} <li class="nav-item">
+                <a
+                  href="{% url 'view_bookings' %}"
+                  class="nav-link custom-link {% if request.resolver_match.url_name == 'view_bookings' %}active{% endif %}"
+                  >Who Booked Me</a
+                >
+              </li> {% endcomment %}
+
+              {% comment %} <li class="nav-item">
+                <form
+                  action="{% url 'logout' %}"
+                  method="post"
+                  style="display: inline"
+                >
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    class="btn animated-bounce btn-danger btn-sm"
+                  >
+                    Logout
+                    
+                  </button>
+                </form>
+              </li> {% endcomment %}
+              <li class="nav-item">
+               {% if not user.chef %}
+                <a href="{% url 'become_chef' %}" class="nav-link custom-link {% if request.resolver_match.url_name == 'become_chef' %}active{% endif %}" 
+                  >Become a Chef</a
+                >
+              </li> 
+              <li class="nav-item">
+                
+
+                <a
+                  href="{% url 'profile_detail' request.user.username %}"
+                  class="btn text-info btn-sm"
+                >
+                  {% if user.profile.profile_image %}
+                  <img
+                    src="{{ user.profile.profile_image.url }}"
+                    class="rounded-circle shadow-sm"
+                    style="width: 45px; height: 45px; object-fit: cover"
+                    alt="{{ user.username }}"
+                  />
+                  {% else %}
+                  <img
+                    src="/static/images/default-chef.jpg"
+                    class="rounded-circle border-success shadow-sm"
+                    style="width: 45px; height: 45px; object-fit: cover"
+                    alt="Default Chef"
+                  />
+                  {% endif %}
+                </a>
+
+                {% else %}
+                
+
+                <a
+                  href="{% url 'profile_detail' request.user.username %}"
+                  class="btn btn-sm"
+                >
+                  {% if user.profile.profile_image %}
+                  <img
+                    src="{{ user.profile.profile_image.url }}"
+                    class="rounded-circle shadow-sm"
+                    style="width: 45px; height: 45px; object-fit: cover"
+                    alt="{{ user.username }}"
+                  />
+                  {% else %}
+                  <img
+                    src="/static/images/default-chef.jpg"
+                    class="rounded-circle border-success shadow-sm"
+                    style="width: 45px; height: 45px; object-fit: cover"
+                    alt="Default Chef"
+                  />
+                  {% endif %}
+                  {% comment %} {% if chef || profile.profile_image %} {%
+                  endcomment %} {% if user.profile.profile_image %}
+                  <img
+                    src="{{ user.profile.profile_image.url }}"
+                    class="rounded-circle shadow-sm"
+                    style="
+                      width: 50px;
+                      height: 50px;
+                      object-fit: cover;
+                      border: 5px solid cyan;
+                    "
+                    alt="{{ chef.name }}"
+                  />
+                  {% else %}
+                  <img
+                    src="/static/images/default-chef.jpg"
+                    class="rounded-circle img-thumbnail shadow-sm"
+                    style="width: 60px; height: 60px; object-fit: cover"
+                    alt="Default Chef"
+                  />
+                  {% endif %} {% comment %} {% endif %} {% endcomment %} 
+                  {%comment %}
+                  <span class="me-2 text-info"
+                    ><strong>#{{ user.username }}</strong></span
+                  >
+                  {% endcomment %}
+                </a>
+
+                {% endif %}
+              </li>
+
+              {% else %}
+              <li class="nav-item">
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm"
+                  >Login</a
+                >
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-sm"
+                  >Signup</a
+                >
+              </li>
+
+              <li class="nav-item">
+                <a
+                  href="{% url 'login' %}?next={% url 'become_chef' %}"
+                  class="btn btn-warning btn-sm"
+                >
+                  Login to Become Chef
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+<style>
+/* Navbar Links Custom Style */
+.navbar-nav .nav-item {
+  margin: 0 8px;
+}
+
+.navbar-nav .custom-link {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff; /* white for dark navbar */
+  padding: 8px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Hover effect */
+.navbar-nav .custom-link:hover {
+  color: rgba(222, 226, 230, 0.5); /* Bootstrap warning color (yellow) */
+  {% comment %} background-color: rgba(255, 255, 255, 0.1); {% endcomment %}
+  text-decoration: none;
+}
+
+/* Active link (optional) */
+.navbar-nav .custom-link.active {
+  color: #ffc107;
+  padding: 8px 10px;
+  margin: 0;
+  {% comment %} background-color: #07ff49a4; {% endcomment %}
+}
+</style>
+      <!-- Messages -->
+      <div class="container mt-4">
+        {% if messages %} {% for message in messages %}
+        <div
+          class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm rounded-3 px-4 py-3 mb-3"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close animated-bounce"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <!-- Page Content -->
+      <main class="rounded">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+    {% comment %} Review sections {% endcomment %}
+
+    {% comment %} <div style="background: url('https://static.wixstatic.com/media/623a24_ad26f6ba7a474830be3a88b985c86a8e~mv2.png/v1/fill/w_1901,h_1000,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/623a24_ad26f6ba7a474830be3a88b985c86a8e~mv2.png') no-repeat center center; background-size: cover; box-shadow: inset 0px 0px 3100px blue;" class="py-2 px-3">
+      <div class="my-3">
+        
+
+        <div
+          id="testimonialCarousel"
+          class="carousel slide"
+          data-bs-ride="carousel"
+          data-bs-interval="3000"
+        >
+          <!-- Indicators -->
+          <div class="carousel-indicators">
+            <button
+              type="button"
+              data-bs-target="#testimonialCarousel"
+              data-bs-slide-to="0"
+              class="active"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#testimonialCarousel"
+              data-bs-slide-to="1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#testimonialCarousel"
+              data-bs-slide-to="2"
+            ></button>
+          </div>
+
+          <!-- Slides -->
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="pt-3 mx-auto" style="max-width: 800px; ">
+                <div
+                  class=" shadow-lg h-100 border-0 rounded-4 testimonial-card"
+                  style="background-color: #0a0022"
+                >
+                <h2 class="text-center text-warning p-4">💬 What People Say</h2>
+                  <div class="card-body p-4">
+                    <h5 class="fw-bold text-primary mb-3">
+                      Absolutely Amazing!
+                    </h5>
+                    <p class="text-light">
+                      “We hired a private chef from Book My Chef for our
+                      anniversary dinner. The food was exquisite, and the
+                      service was impeccable. Our guests were thoroughly
+                      impressed. Highly recommend!”
+                    </p>
+                    <div class="mt-3 text-light">
+                      <strong>– Priya Reddy</strong>
+                      <div class="text-warning mt-1">⭐⭐⭐⭐⭐</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="mx-auto pt-3" style="max-width: 800px; ">
+                <div
+                  class=" shadow-lg h-100 border-0 rounded-4 testimonial-card"
+                  style="background-color: #0a0022"
+                >
+                <h2 class="text-center text-success p-4">💬 What People Say</h2>
+                  <div class="card-body p-4">
+                    <h5 class="fw-bold text-primary mb-3">
+                      A Memorable Experience
+                    </h5>
+                    <p class="text-light">
+                      “Book My Chef made our corporate event a huge success. The
+                      customized menu was perfect, and the chefs were
+                      professional and friendly. We'll definitely be using their
+                      services again!”
+                    </p>
+                    <div class="mt-3 text-light">
+                      <strong>– Rohan Mehra</strong>
+                      <div class="text-warning mt-1">⭐⭐⭐⭐⭐</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item h-100">
+              <div class="pt-3 mx-auto" style="max-width: 800px; ">
+                <div
+                  class=" shadow-lg h-100 border-0 rounded-4 text-light testimonial-card"
+                  style="background-color: #0a0022"
+                >
+                <h2 class="text-center text-info p-4">💬 What People Say</h2>
+                  <div class="card-body p-4">
+                    <h5 class="fw-bold text-primary mb-3">
+                      Exceeded Expectations
+                    </h5>
+                    <p class="text-light">
+                      “Our wedding catering was flawless, thanks to Book My
+                      Chef. The dishes were delicious, and the presentation was
+                      stunning. We couldn't have asked for a better service.”
+                    </p>
+                    <div class="mt-3">
+                      <strong>– Sneha T</strong>
+                      <div class="text-warning mt-1">⭐⭐⭐⭐⭐</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#testimonialCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#testimonialCarousel"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        </div>
+      </div>
+    </div> {% endcomment %}
+
+      <!-- Floating Chatbot Button -->
+<div id="chatbot-button" onclick="toggleChatbot()">
+    💬
+</div>
+
+<!-- Chatbot Window -->
+<div id="chatbot-window" style="display:none;">
+    <div class="chat-header">
+        <strong>Helper Chatbot</strong>
+        <button onclick="toggleChatbot()">×</button>
+    </div>
+    <div id="chat-body" class="chat-body">
+        <!-- Messages will appear here -->
+    </div>
+    <div class="chat-input">
+        <input type="text" id="user-input" placeholder="Write your message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<style>
+#chatbot-button {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: #b604aaff; 
+    color: red;
+    border-radius: 50%; padding: 15px;
+    cursor: pointer; font-size: 20px;
+}
+#chatbot-window {
+    position: fixed;
+    bottom: 80px; right: 20px;
+    width: 300px; height: 400px;
+    border: 1px solid #8a8181ff; border-radius: 10px;
+    background: white; box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    display: flex; flex-direction: column;
+}
+.chat-header {
+    background: #007bff; color: #120101ff;
+    padding: 10px; display: flex;
+    justify-content: space-between; align-items: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.chat-body {
+    background-color: #acd0f4ff;
+    flex: 1; overflow-y: auto; padding: 10px;
+}
+.chat-input {
+    display: flex; border-top: 1px solid #ccc;
+}
+.chat-input input {
+    flex: 1; border: none; padding: 10px;
+}
+.chat-input button {
+    background: #007bff; color: white;
+    border: none; padding: 10px 15px;
+}
+.message { margin: 5px 0; }
+.user { text-align: right; color: blue; }
+.bot { text-align: left; color: green; }
+</style>
+
+<script>
+function toggleChatbot(){
+    let win = document.getElementById("chatbot-window");
+    win.style.display = (win.style.display === "none") ? "flex" : "none";
+}
+
+function sendMessage(){
+    let input = document.getElementById("user-input");
+    let msg = input.value.trim();
+    if(msg === "") return;
+
+    // Show user message
+    let chatBody = document.getElementById("chat-body");
+    chatBody.innerHTML += `<div class="message user">${msg}</div>`;
+
+    // Fake bot response (for now)
+    setTimeout(()=>{
+        let greet = "hello dude how can i Help you Today!"
+        let response = "Teri ma ki Chu*t" + msg;
+        chatBody.innerHTML += `<div class="message bot">${greet}</div>`;
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }, 500);
+
+    input.value = "";
+}
+</script>
+
+
+
+    <footer
+      
+      style="background-color: #022457ff"
+      class="text-light pt-5 pb-4"
+    >
+      <div class="container">
+        <div class="row">
+          <!-- About Section -->
+          <div class="col-md-4 mb-4">
+            <h5 class="text-uppercase fw-bold mb-3">🍽️ Chef Booking</h5>
+            <p>
+              Book professional chefs for your events, parties, or private
+              dining experiences. We bring gourmet to your doorstep with ease
+              and elegance.
+            </p>
+            <p><i class="bi bi-geo-alt-fill"></i> Ranchi, Jharkhand, India</p>
+            <p><i class="bi bi-envelope-fill"></i> support@chefbooking.com</p>
+            <p><i class="bi bi-telephone-fill"></i> +91 98765 43210</p>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="col-md-2 mb-4">
+            <h5 class="text-uppercase fw-bold mb-3">Quick Links</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a
+                  href="{% url 'home' %}"
+                  class="text-light text-decoration-none"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'chef_list' %}"
+                  class="text-light text-decoration-none"
+                  >Chefs</a
+                >
+              </li>
+              <li><a class="text-light text-decoration-none">About Us</a></li>
+              <li><a class="text-light text-decoration-none">Contact</a></li>
+            </ul>
+          </div>
+
+          <!-- Services -->
+          <div class="col-md-3 mb-4">
+            <h5 class="text-uppercase fw-bold mb-3">Services</h5>
+            <ul class="list-unstyled">
+              <li>🎉 Event Catering</li>
+              <li>👨‍🍳 Private Dining</li>
+              <li>🍱 Meal Prep</li>
+              <li>🧁 Baking & Desserts</li>
+            </ul>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="col-md-3 mb-4">
+            <h5 class="text-uppercase fw-bold mb-3">Subscribe</h5>
+            <form>
+              <div class="mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Your email"
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary w-100 animated-bounce"
+              >
+                Subscribe
+              </button>
+            </form>
+            <p class="mt-3 text-warning" style="font-size: 0.9rem">
+              Get updates on new chefs, offers, and culinary tips.
+            </p>
+          </div>
+        </div>
+
+        <hr class="border-light" />
+
+        <div class="text-center">
+          <p class="mb-0">
+            &copy; {{ year }} Chef Booking. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+    </script>
+  </body>
+</html>

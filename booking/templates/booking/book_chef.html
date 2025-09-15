@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Book {{ chef.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-5">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-lg border-0 rounded-4">
+      <div class="card-body p-4">
+        <h3 class="mb-4 text-center fw-bold">🧑‍🍳 Book <span class="text-primary">{{ chef.name }}</span></h3>
+
+        <!-- Chef Info -->
+        <ul class="list-group list-group-flush mb-4">
+          <li class="list-group-item"><strong>Specialty:</strong> {{ chef.specialty }}</li>
+          <li class="list-group-item"><strong>Experience:</strong> {{ chef.experience }} years</li>
+          <li class="list-group-item"><strong>Team Members:</strong> {{ chef.team_members }}</li>
+          <li class="list-group-item text-success fw-semibold">₹{{ chef.price_per_person }} / person</li>
+        </ul>
+
+        <!-- Booking Form -->
+        <form method="post" class="mt-4">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">📅 Date</label>
+            <input type="date" name="date" class="form-control rounded-3" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">⏰ Time</label>
+            <input type="time" name="time" class="form-control rounded-3" required>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">⏳ Persons</label>
+            <input type="number" name="person" class="form-control rounded-3" min="2" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-semibold">
+            ✅ Confirm Booking
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- About Chef Section -->
+    <div class="card shadow-lg border-0 rounded-4 mt-5">
+      <div class="card-body p-4">
+        <h4 class="fw-bold mb-3">ℹ️ About {{ chef.name }}</h4>
+        <p class="text-muted">
+          {{ chef.bio|default:"This chef is highly experienced and passionate about delivering the best food experience at your home or event." }}
+        </p>
+        <p><strong>Education:</strong> {{ chef.education|default:"Not Provided" }}</p>
+        <p><strong>Location:</strong> {{ chef.location|default:"Available across your city" }}</p>
+      </div>
+    </div>
+
+    <!-- Special Instructions -->
+    <div class="card shadow-lg border-0 rounded-4 mt-5">
+      <div class="card-body p-4">
+        <h4 class="fw-bold mb-3">📝 Special Instructions</h4>
+        <p class="text-muted">Please mention any dietary preferences, allergies, or special requests after booking. The chef will contact you before the event to confirm details.</p>
+      </div>
+    </div>
+
+    <!-- FAQs -->
+    <div class="card shadow-lg border-0 rounded-4 mt-5">
+      <div class="card-body p-4">
+        <h4 class="fw-bold mb-3">❓ Frequently Asked Questions</h4>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Q:</strong> Can I cancel the booking?<br><strong>A:</strong> Yes, cancellation is free up to 24 hours before the event.</li>
+          <li class="list-group-item"><strong>Q:</strong> Do I need to arrange ingredients?<br><strong>A:</strong> The chef will inform you beforehand. Ingredients cost may vary.</li>
+          <li class="list-group-item"><strong>Q:</strong> Can the chef handle large parties?<br><strong>A:</strong> Yes, team members will assist for bigger gatherings.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Cancellation Policy -->
+    <div class="card shadow-lg border-0 rounded-4 mt-5 mb-5">
+      <div class="card-body p-4">
+        <h4 class="fw-bold mb-3">📌 Cancellation & Refund Policy</h4>
+        <p class="text-muted">
+          - ✅ Full refund if cancelled 24 hours before the event.<br>
+          - ⚠️ 50% refund if cancelled within 12 hours.<br>
+          - ❌ No refund for last-minute cancellations.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

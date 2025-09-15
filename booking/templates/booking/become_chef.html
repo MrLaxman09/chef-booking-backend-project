@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Become a Chef{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card glass-card shadow-lg border-0">
+      <div class="card-body p-5">
+        <h2 class="mb-4 text-center text-warning fw-bold">
+          🍳 Become a Chef
+        </h2>
+        <p class="text-center text-light mb-4">
+          Fill in your details to showcase your cooking talent and join our chef community.
+        </p>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <!-- Name -->
+          <div class="mb-3 input-group">
+            <span class="input-group-text bg-dark text-warning"><i class="bi bi-person-fill"></i></span>
+            <input type="text" name="name" class="form-control custom-input" placeholder="Enter your full name" required>
+          </div>
+
+          <!-- Specialty -->
+          <div class="mb-3 input-group">
+            <span class="input-group-text bg-dark text-warning"><i class="bi bi-star-fill"></i></span>
+            <input type="text" name="specialty" class="form-control custom-input" placeholder="Your cooking specialty" required>
+          </div>
+
+          <!-- Experience -->
+          <div class="mb-3 input-group">
+            <span class="input-group-text bg-dark text-warning"><i class="bi bi-award-fill"></i></span>
+            <input type="number" name="experience" class="form-control custom-input" placeholder="Years of experience" required>
+          </div>
+
+          <!-- Team members -->
+          <div class="mb-3 input-group">
+            <span class="input-group-text bg-dark text-warning"><i class="bi bi-people-fill"></i></span>
+            <input type="number" name="team_members" class="form-control custom-input" placeholder="Number of team members">
+          </div>
+
+          <!-- Price per person -->
+          <div class="mb-3 input-group">
+            <span class="input-group-text bg-dark text-warning"><i class="bi bi-cash-coin"></i></span>
+            <input type="number" name="price_per_person" class="form-control custom-input" placeholder="Price per person (₹)">
+          </div>
+
+          <!-- Image -->
+          <div class="mb-4">
+            <label class="form-label text-light fw-semibold">Upload Dish Image</label>
+            <input type="file" name="image" class="form-control custom-input">
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-warning w-100 py-3 fw-bold shadow-lg custom-btn">
+            🚀 Create Chef Profile
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+body {
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  font-family: 'Poppins', sans-serif;
+}
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 15px;
+}
+.custom-input {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+}
+.custom-input::placeholder {
+  color: #aaa;
+}
+.custom-input:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  outline: none;
+  box-shadow: 0 0 10px #ffc107;
+  color: #fff;
+}
+.custom-btn {
+  font-size: 1.2rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+.custom-btn:hover {
+  background-color: #ffca2c;
+  box-shadow: 0 0 15px #ffca2c, 0 0 30px #ffca2c;
+}
+</style>
+{% endblock %}

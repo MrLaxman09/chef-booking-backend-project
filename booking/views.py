@@ -26,19 +26,8 @@ def blog_detail(request, pk):
     return render(request, 'booking/blog_detail.html', {'post': post})
 
 
-
-
-
-
-
-
-
-
-
-
-
-def dashboard(request):
-    return render(request, 'booking/dashboard.html')
+# def dashboard(request):
+#     return render(request, 'booking/dashboard.html')
 
 @login_required
 def chef_list(request):
@@ -58,11 +47,13 @@ def chef_list(request):
 })
 
 @login_required
-def view_bookings(request):
+def dashboard(request):
     # Logged in chef ke bookings
+    cos_bookings = Booking.objects.filter(customer=request.user)
     chefs = Chef.objects.all()
     bookings = Booking.objects.filter(chef__user=request.user)
-    return render(request, 'booking/view_bookings.html', {'bookings': bookings,  'chefs': chefs,})
+    pending_count = bookings.filter(status="Pending").count()
+    return render(request, 'booking/dashboard.html', {'bookings': bookings,  'chefs': chefs, 'cos_bookings': cos_bookings, "pending_count": pending_count })
 
 
 
@@ -128,22 +119,13 @@ def become_chef(request):
     
     return render(request, 'booking/become_chef.html', {'form': form})
 
-@login_required
-def chef_dashboard(request):
-    if not hasattr(request.user, 'chef'):
-        return redirect('become_chef')
-    
-    bookings = Booking.objects.filter(chef=request.user.chef)
-    return render(request, 'booking/chef_dashboard.html', {'bookings': bookings})
+
 
 # booking/views.py
 from django.contrib.auth.decorators import login_required
 from .models import Booking
 
-@login_required
-def my_bookings(request):
-    bookings = Booking.objects.filter(customer=request.user)
-    return render(request, 'booking/my_bookings.html', {'bookings': bookings})
+
 
 
 def navbar_view(request):

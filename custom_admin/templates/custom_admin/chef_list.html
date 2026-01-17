@@ -1,0 +1,46 @@
+{% extends "custom_admin/base.html" %}
+{% block title %}Chefs{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Chefs</h3>
+  <div>
+    <form class="d-flex" method="get">
+      <input name="q" value="{{ q }}" class="form-control form-control-sm me-2" placeholder="Search chefs...">
+      <button class="btn btn-sm btn-primary">Search</button>
+    </form>
+  </div>
+</div>
+
+<a href="{% url 'custom_admin:chef_add' %}" class="btn btn-success mb-3">+ Add Chef</a>
+
+<table class="table table-hover">
+  <thead class="table-secondary">
+    <tr><th>Name</th><th>Experience</th><th>Price</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    {% for chef in chefs %}
+    <tr>
+      <td>{{ chef.name }}</td>
+      <td>{{ chef.experience }}</td>
+      <td>₹{{ chef.price }}</td>
+      <td>
+        <a href="{% url 'custom_admin:chef_edit' chef.pk %}" class="btn btn-warning btn-sm">Edit</a>
+        <a href="{% url 'custom_admin:chef_delete' chef.pk %}" class="btn btn-danger btn-sm">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% if chefs.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ chefs.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">Prev</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Page {{ chefs.number }} of {{ chefs.paginator.num_pages }}</span></li>
+    {% if chefs.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ chefs.next_page_number }}{% if q %}&q={{ q }}{% endif %}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

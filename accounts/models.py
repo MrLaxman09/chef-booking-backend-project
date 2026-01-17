@@ -7,7 +7,6 @@ def user_directory_path(instance, filename):
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
     name = models.CharField(max_length=100)
     email = models.EmailField()
     mobile_number = models.CharField(max_length=15, blank=True, null=True)

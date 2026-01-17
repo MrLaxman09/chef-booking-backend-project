@@ -1,0 +1,35 @@
+{% extends "custom_admin/base.html" %}
+{% block title %}Delete Booking{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <h4 class="mb-3">Delete Booking</h4>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Booking #{{ booking.pk }}</h5>
+        <p class="mb-1"><strong>Customer:</strong> {{ booking.customer.username }}</p>
+        <p class="mb-1"><strong>Chef:</strong> {{ booking.chef.name }}</p>
+        <p class="mb-1"><strong>Date & Time:</strong> {{ booking.date }} {{ booking.time }}</p>
+        <p class="mb-1"><strong>Persons:</strong> {{ booking.person }}</p>
+        <p class="mb-1"><strong>Total:</strong> ₹{{ booking.total_price }}</p>
+        <p class="mb-1"><strong>Status:</strong> {{ booking.status }}</p>
+        {% if booking.notes %}
+          <p class="mt-2"><strong>Notes:</strong> {{ booking.notes }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>Warning:</strong> This action cannot be undone. Are you sure you want to permanently delete this booking?
+    </div>
+
+    <form method="post" class="d-inline">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, Delete Booking</button>
+    </form>
+
+    <a href="{% url 'custom_admin:booking_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+  </div>
+</div>
+{% endblock %}

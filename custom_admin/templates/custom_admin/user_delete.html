@@ -1,0 +1,43 @@
+{% extends "custom_admin/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Delete User</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="text-center">
+                {% if user.profile.profile_image %}
+                    <img src="{{ user.profile.profile_image.url }}" class="rounded-circle mb-3"
+                         width="120" height="120">
+                {% else %}
+                    <img src="{% static 'default-user.png' %}" class="rounded-circle mb-3"
+                         width="120" height="120">
+                {% endif %}
+            </div>
+
+            <h5 class="text-center mb-3">Are you sure you want to delete this user?</h5>
+
+            <div class="mb-3">
+                <strong>Name:</strong> {{ user.profile.name }} <br>
+                <strong>Username:</strong> {{ user.username }} <br>
+                <strong>Email:</strong> {{ user.email }} <br>
+                <strong>Role:</strong> {{ user.profile.role|title }} <br>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-danger px-4">Yes, Delete</button>
+                    <a href="{% url 'admin_user_list' %}" class="btn btn-secondary px-4">Cancel</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

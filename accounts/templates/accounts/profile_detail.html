@@ -52,21 +52,21 @@
         <div class="collapse navbar-collapse" id="nb">
           <ul class="navbar-nav ms-auto align-items-center gap-2">
             {% if user.is_authenticated %}
-            <li class="nav-item">
+            {% comment %} <li class="nav-item">
               <a
                 href="{% url 'my_bookings' %}"
                 class="btn btn-outline-light btn-sm"
                 >My Bookings</a
               >
-            </li>
+            </li> {% endcomment %}
 
-            <li class="nav-item">
+            {% comment %} <li class="nav-item">
               <a
                 href="{% url 'view_bookings' %}"
                 class="btn btn-outline-light btn-sm"
                 >Who Booked Me</a
               >
-            </li>
+            </li> {% endcomment %}
 
             <li class="nav-item">
               <form
@@ -214,11 +214,11 @@
                     >📅 Book Now</a
                   > {% endcomment %}
                   {% else %}
-                  <a
+                  {% comment %} <a
                     href="{% url 'my_bookings' %}"
                     class="btn btn-outline-primary w-100"
                     >📋 My Bookings</a
-                  >
+                  > {% endcomment %}
                   {% endif %}
              </div>
 

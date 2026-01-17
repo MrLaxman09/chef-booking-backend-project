@@ -1,0 +1,15 @@
+{% extends "custom_admin/base.html" %}
+{% block title %}Booking {% endblock %}
+{% block content %}
+<h3>Booking #{{ booking.pk }}</h3>
+<ul class="list-group">
+  <li class="list-group-item"><strong>Customer:</strong> {{ booking.customer.username }}</li>
+  <li class="list-group-item"><strong>Chef:</strong> {{ booking.chef.name }}</li>
+  <li class="list-group-item"><strong>Date:</strong> {{ booking.date }} {{ booking.time }}</li>
+  <li class="list-group-item"><strong>Persons:</strong> {{ booking.person }}</li>
+  <li class="list-group-item"><strong>Total Price:</strong> ₹{{ booking.total_price }}</li>
+  <li class="list-group-item"><strong>Status:</strong> {{ booking.status }}</li>
+  <li class="list-group-item"><strong>Notes:</strong><br>{{ booking.notes }}</li>
+</ul>
+<a href="{% url 'custom_admin:booking_list' %}" class="btn btn-secondary mt-3">Back</a>
+{% endblock %}

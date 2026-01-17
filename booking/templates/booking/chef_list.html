@@ -5,7 +5,7 @@
   
   <!-- Heading -->
   <h2 data-aos="fade-down" class="fw-bold display-6 text-light mb-0">
-    🍳 Available Chefs
+     Available Chefs
   </h2>
 
  
@@ -22,7 +22,7 @@
 
 <div class="container m-auto row g-4">
   <p id="noResultMsg" class="text-center text-danger fw-bold" style="display:none;">
-      ❌ No data found
+      No data found
     </p>
   {% for chef in chefs %}
   <div class="col-md-5 col-sm-6 col-lg-4 chef-card pb-4">
@@ -155,13 +155,13 @@
         <div class="mt-3">
           {% if request.user.is_authenticated and request.user != chef.user %}
           <a href="{% url 'book_chef' chef.id %}" class="btn btn-warning w-100"
-            >📅 Book Now</a
+            >Book Now</a
           >
           {% else %}
           <a
-            href="{% url 'my_bookings' %}"
+            href="{% url 'dashboard' %}"
             class="btn btn-outline-primary w-100"
-            >📋 My Bookings</a
+            >My Bookings</a
           >
           {% endif %}
         </div>

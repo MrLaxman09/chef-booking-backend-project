@@ -29,7 +29,7 @@ def my_bookings(request):
 
 from django.shortcuts import render, get_object_or_404
 from .models import Profile
-from review.models import Booking, Review
+
 from django.contrib.auth.models import User
 
 def profile_detail(request, username):

@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container mt-5">
-  <h1 class="mb-5 text-center fw-bold text-warning">📖 Latest Blogs</h1>
+  <h1 class="mb-5 text-center fw-bold text-warning"> Latest Blogs</h1>
 
   <div class="row">
     {% for post in posts %}
@@ -23,7 +23,7 @@
 
           <!-- Author & Date -->
           <p class="text-muted mb-2" style="font-size:14px;">
-            ✍️ <b>{{ post.author.username }}</b> | 🗓️ {{ post.created_at|date:"M d, Y" }}
+             <b>{{ post.author.username }}</b> |  {{ post.created_at|date:"M d, Y" }}
           </p>
 
           <!-- Short content -->

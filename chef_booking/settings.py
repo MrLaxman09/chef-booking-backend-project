@@ -26,7 +26,12 @@ SECRET_KEY = 'django-insecure-9xsvfnw&=9se8l$%jz&izc81lg77(mrks*ujveb@b=&7=_ak7%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'chef-booking-backend-project.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
+
 
 
 

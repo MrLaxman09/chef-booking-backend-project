@@ -4,6 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
     yearNode.textContent = new Date().getFullYear();
   }
 
+  const mobileDrawer = document.getElementById("mobileNavDrawer");
+  if (mobileDrawer && window.bootstrap && window.bootstrap.Offcanvas) {
+    const offcanvas = window.bootstrap.Offcanvas.getOrCreateInstance(mobileDrawer);
+    mobileDrawer.querySelectorAll("a[href]").forEach((link) => {
+      link.addEventListener("click", () => {
+        offcanvas.hide();
+      });
+    });
+  }
+
   document.querySelectorAll("form").forEach((form) => {
     form.addEventListener("submit", () => {
       const button = form.querySelector("button[type='submit']");

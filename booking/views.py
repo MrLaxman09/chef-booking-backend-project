@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from accounts.models import Profile
-from .forms import ChefForm
+from .forms import ChefForm, ContactQueryForm
 from .models import BlogPost, Booking, Chef
 
 
@@ -18,7 +18,20 @@ def home(request):
 
 
 def about(request):
-    return render(request, "booking/about.html")
+    form = ContactQueryForm()
+    return render(request, "booking/about.html", {"contact_form": form})
+
+
+@require_POST
+def submit_contact_query(request):
+    form = ContactQueryForm(request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Message sent successfully.")
+        return redirect("about")
+
+    messages.error(request, "Please correct the highlighted fields and try again.")
+    return render(request, "booking/about.html", {"contact_form": form}, status=400)
 
 
 def blog_list(request):

@@ -1,75 +1,351 @@
-{% extends "base.html" %}
-{% block title %}Chef Booking | Book Trusted Private Chefs{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}Chef Booking | Private Chefs, Catering and Event Dining{% endblock %}
+
+{% block extra_head %}
+<style>
+  .home-hero-pro {
+    position: relative;
+    overflow: hidden;
+    min-height: clamp(420px, 62vh, 620px);
+    border-radius: 24px;
+    background:
+      linear-gradient(92deg, rgba(7, 11, 18, 0.86) 0%, rgba(7, 11, 18, 0.7) 42%, rgba(7, 11, 18, 0.32) 100%),
+      url("https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;
+    box-shadow: 0 18px 40px rgba(13, 18, 25, 0.35);
+  }
+
+  .home-hero-pro::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 18% 22%, rgba(255, 153, 0, 0.24), transparent 42%);
+    pointer-events: none;
+  }
+
+  .home-hero-content {
+    position: relative;
+    z-index: 2;
+    padding: clamp(1.4rem, 5vw, 3.2rem);
+    max-width: 760px;
+    color: #f6f8fb;
+  }
+
+  .home-hero-content h1,
+  .home-hero-content p,
+  .home-hero-content h2 {
+    color: #f6f8fb;
+  }
+
+  .home-hero-kicker {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.34rem 0.8rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.85rem;
+  }
+
+  .home-hero-title {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1.08;
+    margin-bottom: 0.85rem;
+    text-wrap: balance;
+  }
+
+  .home-hero-subtitle {
+    max-width: 620px;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: rgba(246, 248, 251, 0.92);
+    margin-bottom: 1.35rem;
+  }
+
+  .home-hero-trust {
+    margin-top: 1.2rem;
+    display: grid;
+    gap: 0.6rem;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
+
+  .home-hero-trust-item {
+    background: rgba(12, 18, 27, 0.58);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .home-hero-trust-item strong {
+    display: block;
+    color: #ffffff;
+    font-size: 1.02rem;
+  }
+
+  .home-hero-trust-item span {
+    color: rgba(238, 244, 248, 0.88);
+    font-size: 0.82rem;
+  }
+
+  .faq-block {
+    background: #f4f6f7;
+    border: 1px solid #dfe4e7;
+    border-radius: 20px;
+    padding: clamp(1.1rem, 3vw, 2rem);
+  }
+
+  .faq-block .accordion-item {
+    border: 0;
+    border-bottom: 1px solid #b8c2cc;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .faq-block .accordion-button {
+    background: transparent;
+    color: #0e1b3a;
+    font-weight: 700;
+    padding: 1.15rem 0.2rem;
+    box-shadow: none;
+  }
+
+  .faq-block .accordion-button:not(.collapsed) {
+    background: transparent;
+    color: #0e1b3a;
+  }
+
+  .faq-block .accordion-button::after {
+    content: "+";
+    background-image: none;
+    width: auto;
+    height: auto;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #0e1b3a;
+    transform: none;
+  }
+
+  .faq-block .accordion-button:not(.collapsed)::after {
+    content: "−";
+    transform: none;
+  }
+
+  .faq-block .accordion-body {
+    color: #1d2f24;
+    padding: 0.2rem 0.2rem 1.2rem;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="hero mb-4">
-  <div class="row g-4 align-items-center">
-    <div class="col-lg-7">
-      <span class="badge-soft mb-3">Private Chef Marketplace</span>
-      <h1 class="mb-3">Book experienced chefs for home dining and events.</h1>
-      <p class="mb-4">Compare chef specialties, review profiles, and send booking requests in minutes. Built for families, hosts, and event planners who need reliable service.</p>
-      <div class="d-flex flex-wrap gap-2">
-        {% if user.is_authenticated %}
-        <a href="{% url 'chef_list' %}" class="btn btn-light">Browse Chefs</a>
-        <a href="{% url 'dashboard' %}" class="btn btn-outline-light">Open Dashboard</a>
-        {% else %}
-        <a href="{% url 'signup' %}" class="btn btn-light">Create Account</a>
-        <a href="{% url 'login' %}" class="btn btn-outline-light">Sign In</a>
-        {% endif %}
-      </div>
+<section class="home-hero-pro mb-4">
+  <div class="home-hero-content">
+    <span class="home-hero-kicker">PRIVATE CHEF BOOKINGS</span>
+    <h1 class="home-hero-title">The chef is in, for every meal that matters.</h1>
+    <p class="home-hero-subtitle">Bring curated dining to your doorstep with experienced chefs for home dinners, celebrations, and hosted events.</p>
+    <p class="mb-4">Compare chef profiles, specialties, and pricing in one place. Submit your booking request in minutes and track every update directly from your dashboard.</p>
+
+    <div class="d-flex flex-wrap gap-2">
+      {% if user.is_authenticated %}
+      <a href="{% url 'chef_list' %}" class="btn btn-light">Explore Services</a>
+      <a href="{% url 'dashboard' %}" class="btn btn-outline-light">Track My Requests</a>
+      {% else %}
+      <a href="{% url 'signup' %}" class="btn btn-light">Get Started</a>
+      <a href="{% url 'login' %}" class="btn btn-outline-light">Sign In</a>
+      {% endif %}
     </div>
-    <div class="col-lg-5">
-      <div class="metric-grid">
-        <article class="metric-card">
-          <p class="mb-1 text-muted">Verified Profiles</p>
-          <h3 class="mb-0 text-info">Chef-first vetting</h3>
-        </article>
-        <article class="metric-card">
-          <p class="mb-1 text-muted">Clear Pricing</p>
-          <h3 class="mb-0 text-info">Per-person estimates</h3>
-        </article>
-        <article class="metric-card">
-          <p class="mb-1 text-muted">Fast Workflow</p>
-          <h3 class="mb-0 text-info">Request in under 2 minutes</h3>
-        </article>
+
+    <div class="home-hero-trust">
+      <div class="home-hero-trust-item">
+        <strong>Verified Profiles</strong>
+        <span>Chef details you can trust</span>
+      </div>
+      <div class="home-hero-trust-item">
+        <strong>Clear Pricing</strong>
+        <span>Per-person estimates</span>
+      </div>
+      <div class="home-hero-trust-item">
+        <strong>Fast Requests</strong>
+        <span>Book in under 2 minutes</span>
+      </div>
+      <div class="home-hero-trust-item">
+        <strong>Live Tracking</strong>
+        <span>Status on dashboard</span>
       </div>
     </div>
   </div>
 </section>
 
 <section class="page-card p-4 mb-4">
-  <h2 class="section-title">Why people use Chef Booking</h2>
-  <p class="section-subtitle">The platform is designed for confidence, speed, and practical planning.</p>
+  <h2 class="section-title">Our services</h2>
+  <p class="section-subtitle">Built for practical events, not just marketing pages.</p>
   <div class="content-grid">
     <article class="content-card">
       <div class="card-body-tight">
-        <h3 class="h5">Transparent profiles</h3>
-        <p class="mb-0">Each profile includes specialties, years of experience, team size, and pricing details.</p>
+        <h3 class="h5">Private chef bookings</h3>
+        <p class="mb-0">Plan intimate dinners, family weekends, or recurring meal sessions with chefs who match your cuisine and budget needs.</p>
       </div>
     </article>
     <article class="content-card">
       <div class="card-body-tight">
-        <h3 class="h5">Simple booking flow</h3>
-        <p class="mb-0">Select a date, preferred time, and guest count. Your request is sent directly to the chef.</p>
+        <h3 class="h5">Home event catering support</h3>
+        <p class="mb-0">Great for birthdays, anniversaries, and social gatherings where guests expect smooth service and reliable meal quality.</p>
       </div>
     </article>
     <article class="content-card">
       <div class="card-body-tight">
-        <h3 class="h5">Unified dashboard</h3>
-        <p class="mb-0">Track requests as a customer and incoming bookings as a chef from one place.</p>
+        <h3 class="h5">Chef-led hosted experiences</h3>
+        <p class="mb-0">Use specialized chefs for themed nights and premium dining setups where menu execution and timing matter.</p>
       </div>
     </article>
+  </div>
+</section>
+
+<section class="page-card p-4 mb-4">
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <h2 class="section-title">How booking works</h2>
+      <p class="section-subtitle">Simple steps with clear outputs.</p>
+      <div class="metric-card mb-2">
+        <h3 class="h6 mb-1">Step 1: Choose a chef profile</h3>
+        <p class="mb-0">Compare specialty, experience, and cost per person before you request.</p>
+      </div>
+      <div class="metric-card mb-2">
+        <h3 class="h6 mb-1">Step 2: Enter event details</h3>
+        <p class="mb-0">Select date, time, and guest count to create a complete booking request.</p>
+      </div>
+      <div class="metric-card mb-2">
+        <h3 class="h6 mb-1">Step 3: Chef responds</h3>
+        <p class="mb-0">Chefs manage pending requests and update status from their dashboard.</p>
+      </div>
+      <div class="metric-card">
+        <h3 class="h6 mb-1">Step 4: Track everything in one place</h3>
+        <p class="mb-0">You can monitor upcoming, past, and updated requests without losing context.</p>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <h2 class="section-title">Why this flow works</h2>
+      <p class="section-subtitle">It keeps both customer and chef aligned.</p>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Structured profile information reduces mismatched expectations.</li>
+        <li class="list-group-item">Clear request fields reduce manual follow-up calls.</li>
+        <li class="list-group-item">Status changes are visible to both sides immediately.</li>
+        <li class="list-group-item">Past request cleanup keeps dashboards readable over time.</li>
+        <li class="list-group-item">Role-based admin access protects platform operations securely.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="page-card p-4 mb-4">
+  <h2 class="section-title">Use cases we support regularly</h2>
+  <p class="section-subtitle">Designed for real hosting needs across different event sizes.</p>
+  <div class="row g-3">
+    <div class="col-md-6 col-xl-3">
+      <div class="metric-card h-100">
+        <h3 class="h6">Weekend family meals</h3>
+        <p class="mb-0">When you want high-quality food at home without spending your full day in the kitchen.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+      <div class="metric-card h-100">
+        <h3 class="h6">Special celebrations</h3>
+        <p class="mb-0">Birthdays, anniversaries, and festive gatherings where reliable service and timing are essential.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+      <div class="metric-card h-100">
+        <h3 class="h6">Corporate hosting</h3>
+        <p class="mb-0">Leadership lunches and team events where meal quality reflects directly on your brand image.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+      <div class="metric-card h-100">
+        <h3 class="h6">Guest-first home parties</h3>
+        <p class="mb-0">Focus on conversations and hosting while professionals handle meal preparation and service flow.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq-block mb-4">
+  <h2 class="section-title text-center mb-4">Frequently asked questions</h2>
+  <div class="accordion accordion-flush" id="homeFaqAccordion">
+    <div class="accordion-item">
+      <h3 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="true" aria-controls="faqOne">
+          What is the booking process for chefs?
+        </button>
+      </h3>
+      <div id="faqOne" class="accordion-collapse collapse show" data-bs-parent="#homeFaqAccordion">
+        <div class="accordion-body">
+          Booking through Chef Booking is simple. Browse chef profiles, compare cuisine, experience, and pricing, then submit your date, time, and guest count. The chef receives your request and can accept or reject it from their dashboard. Once updated, you can track the status in your own dashboard without additional follow-up.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h3 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo" aria-expanded="false" aria-controls="faqTwo">
+          What events can I book chefs for?
+        </button>
+      </h3>
+      <div id="faqTwo" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+        <div class="accordion-body">
+          You can book chefs for private dinners, birthdays, anniversaries, festive gatherings, and corporate events. The platform is built for both small home meals and larger hosted occasions.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h3 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThree" aria-expanded="false" aria-controls="faqThree">
+          How is total price calculated?
+        </button>
+      </h3>
+      <div id="faqThree" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+        <div class="accordion-body">
+          Total estimate is based on the chef's listed per-person charge and the guest count entered during booking. This gives you transparent cost visibility before submission.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h3 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFour" aria-expanded="false" aria-controls="faqFour">
+          Can I remove old booking history from my dashboard?
+        </button>
+      </h3>
+      <div id="faqFour" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+        <div class="accordion-body">
+          Yes. Past bookings can be removed from your list so the dashboard stays clean. This does not disrupt active booking flow or current requests.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h3 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFive" aria-expanded="false" aria-controls="faqFive">
+          Is there admin oversight for quality and moderation?
+        </button>
+      </h3>
+      <div id="faqFive" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+        <div class="accordion-body">
+          Yes. A protected admin module is available for superusers to manage chefs, bookings, blogs, and users with role-based access control and secure server-side checks.
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section class="page-card p-4">
   <div class="row g-4 align-items-center">
     <div class="col-lg-8">
-      <h2 class="section-title">Ready to plan your next meal service?</h2>
-      <p class="section-subtitle mb-0">Start by exploring the chef directory and filtering by cuisine or experience.</p>
+      <h2 class="section-title">Plan your next dining experience with confidence</h2>
+      <p class="section-subtitle mb-0">Start with the chef directory, compare profiles, and place a request that fits your event goals.</p>
     </div>
     <div class="col-lg-4 text-lg-end">
-      <a href="{% if user.is_authenticated %}{% url 'chef_list' %}{% else %}{% url 'login' %}{% endif %}" class="btn btn-primary">Get Started</a>
+      <a href="{% if user.is_authenticated %}{% url 'chef_list' %}{% else %}{% url 'signup' %}{% endif %}" class="btn btn-primary">Start Booking</a>
     </div>
   </div>
 </section>

@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from accounts.models import Profile
-from booking.models import BlogPost, Booking, Chef
+from booking.models import BlogPost, Booking, Chef, ContactQuery
 
 from .forms import BlogPostForm, BookingStatusForm, ChefForm
 
@@ -75,6 +75,7 @@ def dashboard(request):
         "users_count": Profile.objects.count(),
         "blog_count": BlogPost.objects.count(),
         "published_blog_count": BlogPost.objects.filter(is_published=True).count(),
+        "contact_queries_count": ContactQuery.objects.filter(is_deleted=False).count(),
         "recent_bookings": recent_bookings,
     }
     return render(request, "custom_admin/dashboard.html", context)
@@ -385,3 +386,40 @@ def user_delete(request, pk):
     profile.user.delete()
     messages.success(request, "User deleted.")
     return redirect("custom_admin:user_list")
+
+
+@admin_required
+def contact_query_list(request):
+    q = request.GET.get("q", "").strip()
+    queries_qs = ContactQuery.objects.filter(is_deleted=False)
+    if q:
+        queries_qs = queries_qs.filter(
+            Q(name__icontains=q)
+            | Q(email__icontains=q)
+            | Q(phone_number__icontains=q)
+            | Q(city__icontains=q)
+            | Q(message__icontains=q)
+        )
+    paginator = Paginator(queries_qs, 20)
+    queries = paginator.get_page(request.GET.get("page"))
+    return render(
+        request,
+        "custom_admin/contact_query_list.html",
+        {"queries": queries, "q": q},
+    )
+
+
+@admin_required
+def contact_query_view(request, pk):
+    query = get_object_or_404(ContactQuery, pk=pk, is_deleted=False)
+    return render(request, "custom_admin/contact_query_view.html", {"query": query})
+
+
+@admin_required
+@require_POST
+def contact_query_delete(request, pk):
+    query = get_object_or_404(ContactQuery, pk=pk, is_deleted=False)
+    query.is_deleted = True
+    query.save(update_fields=["is_deleted"])
+    messages.success(request, "Contact query deleted successfully.")
+    return redirect("custom_admin:contact_query_list")

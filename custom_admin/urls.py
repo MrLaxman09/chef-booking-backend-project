@@ -32,4 +32,8 @@ urlpatterns = [
     path("users/edit/<int:pk>/", views.user_edit, name="user_edit"),
     path("users/toggle-active/<int:pk>/", views.user_toggle_active, name="user_toggle_active"),
     path("users/delete/<int:pk>/", views.user_delete, name="user_delete"),
+
+    path("contact-queries/", views.contact_query_list, name="contact_query_list"),
+    path("contact-queries/view/<int:pk>/", views.contact_query_view, name="contact_query_view"),
+    path("contact-queries/delete/<int:pk>/", views.contact_query_delete, name="contact_query_delete"),
 ]

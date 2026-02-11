@@ -12,6 +12,7 @@ urlpatterns = [
     # Home and Chef Pages
     path('', booking_views.home, name='home'),
     path('about/', booking_views.about, name='about'),
+    path('contact/submit/', booking_views.submit_contact_query, name='submit_contact_query'),
     path('blog/', booking_views.blog_list, name='blog_list'),
     path('<int:pk>/', booking_views.blog_detail, name='blog_detail'),
     
@@ -40,6 +41,8 @@ urlpatterns = [
     path('profile/<str:username>/<int:booking_id>/<int:review_id>/', accounts_views.profile_detail, name='profile_detail_with_review'),
 
     path('profile/<str:username>/upload-images/', accounts_views.upload_work_images, name='upload_work_images'),
+    path('profile/<str:username>/work-images/<int:image_id>/update/', accounts_views.update_work_image, name='update_work_image'),
+    path('profile/<str:username>/work-images/<int:image_id>/delete/', accounts_views.delete_work_image, name='delete_work_image'),
 
     
 

@@ -33,6 +33,7 @@
       <a href="{% url 'custom_admin:booking_list' %}" class="{% if request.resolver_match.url_name == 'booking_list' or request.resolver_match.url_name == 'booking_view' %}active{% endif %}">Bookings</a>
       <a href="{% url 'custom_admin:blog_list' %}" class="{% if request.resolver_match.url_name == 'blog_list' or request.resolver_match.url_name == 'blog_add' or request.resolver_match.url_name == 'blog_edit' %}active{% endif %}">Blog Posts</a>
       <a href="{% url 'custom_admin:user_list' %}" class="{% if request.resolver_match.url_name == 'user_list' or request.resolver_match.url_name == 'user_view' or request.resolver_match.url_name == 'user_edit' %}active{% endif %}">Users</a>
+      <a href="{% url 'custom_admin:contact_query_list' %}" class="{% if request.resolver_match.url_name == 'contact_query_list' or request.resolver_match.url_name == 'contact_query_view' %}active{% endif %}">Contact Queries</a>
       <hr class="border-light" />
       <a href="{% url 'home' %}">Back to Site</a>
       <form action="{% url 'custom_admin:logout' %}" method="post" class="mt-2">

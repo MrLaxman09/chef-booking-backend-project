@@ -55,4 +55,67 @@
     </div>
   </div>
 </section>
+
+<section id="contact" class="page-card p-4 mt-4">
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <h2 class="section-title">Contact Us</h2>
+      <p class="section-subtitle mb-0">
+        Share your event details and we will help you connect with the right chef profile.
+      </p>
+    </div>
+    <div class="col-lg-7">
+      <form id="contactQueryForm" method="post" action="{% url 'submit_contact_query' %}" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-6">
+          <label class="form-label" for="{{ contact_form.name.id_for_label }}">Name</label>
+          {{ contact_form.name }}
+          {% if contact_form.name.errors %}<div class="text-danger small mt-1">{{ contact_form.name.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="{{ contact_form.email.id_for_label }}">Email</label>
+          {{ contact_form.email }}
+          {% if contact_form.email.errors %}<div class="text-danger small mt-1">{{ contact_form.email.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="{{ contact_form.phone_number.id_for_label }}">Phone Number</label>
+          {{ contact_form.phone_number }}
+          {% if contact_form.phone_number.help_text %}<div class="form-text">{{ contact_form.phone_number.help_text }}</div>{% endif %}
+          {% if contact_form.phone_number.errors %}<div class="text-danger small mt-1">{{ contact_form.phone_number.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="{{ contact_form.city.id_for_label }}">City</label>
+          {{ contact_form.city }}
+          {% if contact_form.city.errors %}<div class="text-danger small mt-1">{{ contact_form.city.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="{{ contact_form.address.id_for_label }}">Address</label>
+          {{ contact_form.address }}
+          {% if contact_form.address.errors %}<div class="text-danger small mt-1">{{ contact_form.address.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="{{ contact_form.message.id_for_label }}">Message</label>
+          {{ contact_form.message }}
+          {% if contact_form.message.errors %}<div class="text-danger small mt-1">{{ contact_form.message.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <button id="contactSubmitButton" type="submit" class="btn btn-primary">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const contactForm = document.getElementById("contactQueryForm");
+  const contactSubmitButton = document.getElementById("contactSubmitButton");
+  if (contactForm && contactSubmitButton) {
+    contactForm.addEventListener("submit", () => {
+      contactSubmitButton.disabled = true;
+      contactSubmitButton.textContent = "Sending...";
+    });
+  }
+</script>
 {% endblock %}

@@ -3,13 +3,13 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
-from django.forms import modelformset_factory
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from booking.models import Booking
 
-from .forms import ProfileForm, SignUpForm
+from .forms import ProfileForm, SignUpForm, WorkImageForm
 from .models import Profile, WorkImage
 
 
@@ -94,28 +94,54 @@ def upload_work_images(request, username):
         messages.error(request, "You can only manage images for your own profile.")
         return redirect("profile_detail", username=username)
 
-    work_image_formset = modelformset_factory(WorkImage, fields=("image",), extra=2, can_delete=True)
-
     if request.method == "POST":
-        formset = work_image_formset(
-            request.POST,
-            request.FILES,
-            queryset=WorkImage.objects.filter(profile=profile),
-        )
-        if formset.is_valid():
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.profile = profile
-                instance.save()
-            for obj in formset.deleted_objects:
-                obj.delete()
-            messages.success(request, "Work images updated.")
-            return redirect("profile_detail", username=username)
+        form = WorkImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            work = form.save(commit=False)
+            work.profile = profile
+            work.save()
+            messages.success(request, "Image uploaded successfully.")
+            return redirect("upload_work_images", username=username)
+        messages.error(request, "Please select a valid image file.")
     else:
-        formset = work_image_formset(queryset=WorkImage.objects.filter(profile=profile))
+        form = WorkImageForm()
+
+    images = profile.work_images.all().order_by("-uploaded_at")
 
     return render(
         request,
         "accounts/upload_work_images.html",
-        {"formset": formset, "profile": profile},
+        {"form": form, "profile": profile, "images": images},
     )
+
+
+@login_required
+@require_POST
+def update_work_image(request, username, image_id):
+    profile = get_object_or_404(Profile, user__username=username)
+    if request.user != profile.user:
+        messages.error(request, "You can only update your own gallery images.")
+        return redirect("profile_detail", username=username)
+
+    work_image = get_object_or_404(WorkImage, id=image_id, profile=profile)
+    form = WorkImageForm(request.POST, request.FILES, instance=work_image)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Image updated successfully.")
+    else:
+        messages.error(request, "Please select a valid replacement image.")
+    return redirect("upload_work_images", username=username)
+
+
+@login_required
+@require_POST
+def delete_work_image(request, username, image_id):
+    profile = get_object_or_404(Profile, user__username=username)
+    if request.user != profile.user:
+        messages.error(request, "You can only delete your own gallery images.")
+        return redirect("profile_detail", username=username)
+
+    work_image = get_object_or_404(WorkImage, id=image_id, profile=profile)
+    work_image.delete()
+    messages.success(request, "Image deleted from gallery.")
+    return redirect("upload_work_images", username=username)

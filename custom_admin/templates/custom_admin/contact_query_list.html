@@ -1,0 +1,59 @@
+﻿{% extends "custom_admin/base.html" %}
+{% block title %}Contact Queries{% endblock %}
+{% block content %}
+<section class="page-card p-4 mb-4 d-flex flex-wrap justify-content-between align-items-end gap-3">
+  <div>
+    <h2 class="section-title mb-1">Contact Queries</h2>
+    <p class="section-subtitle mb-0">View and manage contact form submissions.</p>
+  </div>
+  <form method="get" class="d-flex gap-2" style="max-width:420px; width:100%;">
+    <input name="q" value="{{ q }}" class="form-control" placeholder="Search by name, email, city" />
+    <button class="btn btn-primary">Search</button>
+  </form>
+</section>
+
+<div class="data-table-wrap">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>City</th>
+        <th>Message</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in queries %}
+      <tr>
+        <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.phone_number|default:"-" }}</td>
+        <td>{{ item.city|default:"-" }}</td>
+        <td>{{ item.message|truncatechars:70 }}</td>
+        <td>
+          <a href="{% url 'custom_admin:contact_query_view' item.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+          <button
+            class="btn btn-sm btn-outline-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmDeleteModal"
+            data-action="{% url 'custom_admin:contact_query_delete' item.pk %}"
+            data-name="query from {{ item.name }}"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7">No contact queries found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% include "custom_admin/partials/pagination.html" with page_obj=queries q=q %}
+{% include "custom_admin/partials/delete_modal.html" %}
+{% endblock %}

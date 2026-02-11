@@ -97,33 +97,33 @@
         <div class="offcanvas-body d-flex flex-column">
           <ul class="navbar-nav flex-column gap-1 mobile-nav-links">
             <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}" data-bs-dismiss="offcanvas">Home</a>
+              <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'blog_list' %}active{% endif %}" href="{% url 'blog_list' %}" data-bs-dismiss="offcanvas">Blog</a>
+              <a class="nav-link {% if request.resolver_match.url_name == 'blog_list' %}active{% endif %}" href="{% url 'blog_list' %}">Blog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}" data-bs-dismiss="offcanvas">About</a>
+              <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
             </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'chef_list' %}active{% endif %}" href="{% url 'chef_list' %}" data-bs-dismiss="offcanvas">Chefs</a>
+              <a class="nav-link {% if request.resolver_match.url_name == 'chef_list' %}active{% endif %}" href="{% url 'chef_list' %}">Chefs</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}" data-bs-dismiss="offcanvas">Dashboard</a>
+              <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
             </li>
             {% if is_admin_user %}
             <li class="nav-item mt-2">
-              <a class="btn btn-sm btn-outline-light w-100" href="{% url 'custom_admin:dashboard' %}" data-bs-dismiss="offcanvas">Manage Admin</a>
+              <a class="btn btn-sm btn-outline-light w-100" href="{% url 'custom_admin:dashboard' %}">Manage Admin</a>
             </li>
             {% endif %}
             {% if not chef %}
             <li class="nav-item mt-2">
-              <a class="btn btn-sm btn-accent w-100" href="{% url 'become_chef' %}" data-bs-dismiss="offcanvas">Become a Chef</a>
+              <a class="btn btn-sm btn-accent w-100" href="{% url 'become_chef' %}">Become a Chef</a>
             </li>
             {% endif %}
             <li class="nav-item mt-2 d-flex align-items-center gap-2">
-              <a class="avatar-btn" href="{% url 'profile_detail' request.user.username %}" aria-label="Profile" data-bs-dismiss="offcanvas">
+              <a class="avatar-btn" href="{% url 'profile_detail' request.user.username %}" aria-label="Profile">
                 {% if user_profile and user_profile.profile_image %}
                 <img src="{{ user_profile.profile_image.url }}" alt="{{ user.username }} profile" loading="lazy" />
                 {% else %}
@@ -140,10 +140,10 @@
             </li>
             {% else %}
             <li class="nav-item mt-2">
-              <a class="btn btn-sm btn-outline-light w-100" href="{% url 'login' %}" data-bs-dismiss="offcanvas">Login</a>
+              <a class="btn btn-sm btn-outline-light w-100" href="{% url 'login' %}">Login</a>
             </li>
             <li class="nav-item mt-2">
-              <a class="btn btn-sm btn-light w-100" href="{% url 'signup' %}" data-bs-dismiss="offcanvas">Create Account</a>
+              <a class="btn btn-sm btn-light w-100" href="{% url 'signup' %}">Create Account</a>
             </li>
             {% endif %}
           </ul>

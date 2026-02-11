@@ -1,46 +1,48 @@
 {% extends "custom_admin/base.html" %}
 {% block title %}Chefs{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h3>Chefs</h3>
+<section class="page-card p-4 mb-4 d-flex flex-wrap justify-content-between align-items-end gap-3">
   <div>
-    <form class="d-flex" method="get">
-      <input name="q" value="{{ q }}" class="form-control form-control-sm me-2" placeholder="Search chefs...">
-      <button class="btn btn-sm btn-primary">Search</button>
-    </form>
+    <h2 class="section-title mb-1">Manage Chefs</h2>
+    <p class="section-subtitle mb-0">Create, edit, and remove chef profiles.</p>
   </div>
+  <form method="get" class="d-flex gap-2" style="max-width:520px; width:100%;">
+    <input name="q" value="{{ q }}" class="form-control" placeholder="Search by chef, specialty, or username" />
+    <select name="sort" class="form-select" style="max-width: 160px;">
+      <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+      <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
+      <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
+      <option value="price" {% if sort == 'price' %}selected{% endif %}>Price</option>
+    </select>
+    <button class="btn btn-primary">Apply</button>
+  </form>
+</section>
+
+<div class="mb-3"><a href="{% url 'custom_admin:chef_add' %}" class="btn btn-primary">Add Chef</a></div>
+
+<div class="data-table-wrap">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Name</th><th>User</th><th>Specialty</th><th>Experience</th><th>Price</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for chef in chefs %}
+      <tr>
+        <td>{{ chef.name }}</td>
+        <td>{{ chef.user.username }}</td>
+        <td>{{ chef.specialty }}</td>
+        <td>{{ chef.experience }} years</td>
+        <td>INR {{ chef.price_per_person }}</td>
+        <td>
+          <a href="{% url 'custom_admin:chef_edit' chef.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-action="{% url 'custom_admin:chef_delete' chef.pk %}" data-name="{{ chef.name }}">Delete</button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">No chefs found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
-<a href="{% url 'custom_admin:chef_add' %}" class="btn btn-success mb-3">+ Add Chef</a>
-
-<table class="table table-hover">
-  <thead class="table-secondary">
-    <tr><th>Name</th><th>Experience</th><th>Price</th><th>Actions</th></tr>
-  </thead>
-  <tbody>
-    {% for chef in chefs %}
-    <tr>
-      <td>{{ chef.name }}</td>
-      <td>{{ chef.experience }}</td>
-      <td>₹{{ chef.price }}</td>
-      <td>
-        <a href="{% url 'custom_admin:chef_edit' chef.pk %}" class="btn btn-warning btn-sm">Edit</a>
-        <a href="{% url 'custom_admin:chef_delete' chef.pk %}" class="btn btn-danger btn-sm">Delete</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<nav>
-  <ul class="pagination">
-    {% if chefs.has_previous %}
-      <li class="page-item"><a class="page-link" href="?page={{ chefs.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">Prev</a></li>
-    {% endif %}
-    <li class="page-item disabled"><span class="page-link">Page {{ chefs.number }} of {{ chefs.paginator.num_pages }}</span></li>
-    {% if chefs.has_next %}
-      <li class="page-item"><a class="page-link" href="?page={{ chefs.next_page_number }}{% if q %}&q={{ q }}{% endif %}">Next</a></li>
-    {% endif %}
-  </ul>
-</nav>
+{% include "custom_admin/partials/pagination.html" with page_obj=chefs q=q sort=sort %}
+{% include "custom_admin/partials/delete_modal.html" %}
 {% endblock %}

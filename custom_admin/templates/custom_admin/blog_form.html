@@ -1,0 +1,42 @@
+{% extends "custom_admin/base.html" %}
+{% block title %}{{ action }} Blog Post{% endblock %}
+{% block content %}
+<section class="page-card p-4 mb-4">
+  <h2 class="section-title mb-1">{{ action }} Blog Post</h2>
+  <p class="section-subtitle mb-0">Use publish toggle to control public visibility.</p>
+</section>
+
+<section class="form-panel" style="max-width:960px;">
+  <form method="post" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+    <div class="col-12">
+      <label for="{{ form.title.id_for_label }}" class="form-label">Title</label>
+      {{ form.title }}
+      {% if form.title.errors %}<div class="text-danger small mt-1">{{ form.title.errors|striptags }}</div>{% endif %}
+    </div>
+    <div class="col-12">
+      <label for="{{ form.image.id_for_label }}" class="form-label">Featured Image</label>
+      {{ form.image }}
+      {% if post and post.image %}
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="mt-2" style="width: 220px; border-radius: 10px;" loading="lazy" />
+      {% endif %}
+      {% if form.image.errors %}<div class="text-danger small mt-1">{{ form.image.errors|striptags }}</div>{% endif %}
+    </div>
+    <div class="col-12">
+      <label for="{{ form.content.id_for_label }}" class="form-label">Content</label>
+      {{ form.content }}
+      {% if form.content.errors %}<div class="text-danger small mt-1">{{ form.content.errors|striptags }}</div>{% endif %}
+    </div>
+    <div class="col-12">
+      <div class="form-check">
+        {{ form.is_published }}
+        <label class="form-check-label" for="{{ form.is_published.id_for_label }}">Published</label>
+      </div>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">{{ action }}</button>
+      <a href="{% url 'custom_admin:blog_list' %}" class="btn btn-outline-primary ms-2">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

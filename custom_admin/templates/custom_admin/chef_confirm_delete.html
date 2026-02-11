@@ -1,12 +1,13 @@
 {% extends "custom_admin/base.html" %}
 {% block title %}Delete Chef{% endblock %}
 {% block content %}
-<h4>Delete Chef</h4>
-<p>Are you sure you want to delete <strong>{{ chef.name }}</strong>?</p>
-
-<form method="post">
-  {% csrf_token %}
-  <button class="btn btn-danger">Yes, Delete</button>
-  <a class="btn btn-secondary" href="{% url 'custom_admin:chef_list' %}">Cancel</a>
-</form>
+<div class="page-card p-4" style="max-width:700px;">
+  <h2 class="h4 mb-3">Delete Chef</h2>
+  <p>Are you sure you want to remove <strong>{{ chef.name }}</strong> from the chef directory?</p>
+  <form method="post" class="mt-3">
+    {% csrf_token %}
+    <button class="btn btn-danger">Delete Chef</button>
+    <a class="btn btn-outline-primary ms-2" href="{% url 'custom_admin:chef_list' %}">Cancel</a>
+  </form>
+</div>
 {% endblock %}

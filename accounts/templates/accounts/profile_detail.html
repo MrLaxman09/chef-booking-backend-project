@@ -1,317 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Chef Booking{% endblock %}</title>
-    <!-- Bootstrap 5 CDN -->
-    <!-- in your base.html inside <head> -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
-      rel="stylesheet"
-    />
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ profile_user.username }} Profile{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  </head>
-  <body
-    style="
-      background: url('https://wallpaperaccess.com/full/1306019.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    "
-  >
-    <nav
-      id="mainNavbar"
-      class="navbar bg-dark navbar-expand-lg navbar-dark shadow-sm sticky-top"
-    >
-      <div class="container">
-        <a
-          class="navbar-brand fw-bold fs-4 text-warning"
-          href="{% url 'chef_list' %}"
-        >
-          🍽️ ChefBooking
-        </a>
-
-        <button
-          class="navbar-toggler animated-bounce"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#nb"
-          aria-controls="nb"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="nb">
-          <ul class="navbar-nav ms-auto align-items-center gap-2">
-            {% if user.is_authenticated %}
-            {% comment %} <li class="nav-item">
-              <a
-                href="{% url 'my_bookings' %}"
-                class="btn btn-outline-light btn-sm"
-                >My Bookings</a
-              >
-            </li> {% endcomment %}
-
-            {% comment %} <li class="nav-item">
-              <a
-                href="{% url 'view_bookings' %}"
-                class="btn btn-outline-light btn-sm"
-                >Who Booked Me</a
-              >
-            </li> {% endcomment %}
-
-            <li class="nav-item">
-              <form
-                action="{% url 'logout' %}"
-                method="post"
-                style="display: inline"
-              >
-                {% csrf_token %}
-                <button
-                  type="submit"
-                  class="btn animated-bounce btn-danger btn-sm"
-                >
-                  Logout
-                </button>
-              </form>
-            </li>
-
-            {% comment %} <li class="nav-item">
-              {% if not user.chef %}
-              <a href="{% url 'become_chef' %}" class="btn btn-warning btn-sm"
-                >Become a Chef</a
-              >
-              <a
-                href="{% url 'profile_detail' request.user.username %}"
-                class="btn text-info btn-sm"
-              >
-                {% if chef.profile_image %}
-                <img
-                  src="{{ chef.profile_image.url }}"
-                  class="rounded-circle img-thumbnail shadow-sm"
-                  style="width: 50px; height: 50px; object-fit: cover"
-                  alt="{{ user.username }}"
-                />
-                {% else %}
-                <img
-                  src="/static/images/default-chef.jpg"
-                  class="rounded-circle shadow-sm"
-                  style="width: 45px; height: 45px; object-fit: cover"
-                  alt="Default Chef"
-                />
-                {% endif %}
-              </a>
-              {% endif %}
-            </li> {% endcomment %}
-            <li class="nav-item">
-              <a
-                href="{% url 'profile_detail' request.user.username %}"
-                class="btn btn-sm"
-              >
-                {% if profile.profile_image %}
-                <img
-                  src="{{ profile.profile_image.url }}"
-                  class="rounded-circle thumbnail shadow-sm"
-                  style="
-                    width: 50px;
-                    height: 50px;
-                    object-fit: cover;
-                    border: 5px solid green;
-                  "
-                  alt="{{ chef.name }}"
-                />
-                {% else %}
-                <img
-                  src="/static/images/default-chef.jpg"
-                  class="rounded-circle img-thumbnail shadow-sm"
-                  style="width: 60px; height: 60px; object-fit: cover"
-                  alt="Default Chef"
-                />
-                {% endif %} {% comment %}
-                <span class="me-2 text-info"
-                  ><strong>#{{ user.username }}</strong></span
-                >
-                {% endcomment %}
-              </a>
-            </li>
-
-            {% else %}
-            <li class="nav-item">
-              <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm"
-                >Login</a
-              >
-            </li>
-
-            <li class="nav-item">
-              <a href="{% url 'signup' %}" class="btn btn-primary btn-sm"
-                >Signup</a
-              >
-            </li>
-
-            <li class="nav-item">
-              <a
-                href="{% url 'login' %}?next={% url 'become_chef' %}"
-                class="btn btn-warning btn-sm"
-              >
-                Login to Become Chef
-              </a>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
+{% block content %}
+<div class="row g-4">
+  <aside class="col-lg-4">
+    <div class="page-card p-4">
+      <div class="text-center mb-3">
+        {% if profile.profile_image %}
+        <img src="{{ profile.profile_image.url }}" alt="{{ profile_user.username }}" style="width:140px;height:140px;border-radius:50%;object-fit:cover;" loading="lazy" />
+        {% else %}
+        <img src="{% static 'images/default-chef.jpg' %}" alt="Default profile" style="width:140px;height:140px;border-radius:50%;object-fit:cover;" loading="lazy" />
+        {% endif %}
       </div>
-    </nav>
+      <h1 class="h4 text-center mb-1">{{ profile.name|default:profile_user.username }}</h1>
+      <p class="text-center text-muted mb-3">@{{ profile_user.username }}</p>
+      {% if is_chef %}
+      <p class="text-center"><span class="badge-soft">Chef profile active</span></p>
+      {% endif %}
 
-    <div class="container py-5">
-      <div class="row justify-content-center">
-        <div class="col-md-10">
-          <div
-            class="card text-white shadow border-0 rounded-4"
-            style="background: linear-gradient(to right, #031645ff, #610432ff)"
-          >
-            <div class="row g-0">
-              <!-- Profile Image -->
-              <div class="col-md-4 text-center p-4">
-                {% if profile.profile_image %}
-                <img
-                  src="{{ profile.profile_image.url }}"
-                  alt="Profile Image"
-                  class="img-fluid rounded"
-                />
-                {% else %}
-                <img
-                  src="/static/images/default-chef.jpg"
-                  alt="Default Profile"
-                  class="img-fluid rounded"
-                />
-                {% endif %}
-                <h4 class="mt-3">{{ profile.name }}</h4>
-                <p class="text-warning">@{{ profile.user.username }}</p>
-                {% if is_owner %}
-                <a
-                  href="{% url 'edit_profile' %}"
-                  class="btn btn-outline-primary btn-sm"
-                  >✏️ Edit Profile</a
-                >
-                {% endif %}
-                <hr />
-                <p class="mt-3 text-start p-3 rounded">
-                  <span class="text-warning">Bio: </span>{{ profile.bio }}
-                </p>
-                <hr />
-                
-            <div class="mt-3">
-                  {% if request.user != chef.user %}
-                  {% comment %} <a href="{% url 'book_chef' chef.id %}" class="btn btn-warning w-100"
-                    >📅 Book Now</a
-                  > {% endcomment %}
-                  {% else %}
-                  {% comment %} <a
-                    href="{% url 'my_bookings' %}"
-                    class="btn btn-outline-primary w-100"
-                    >📋 My Bookings</a
-                  > {% endcomment %}
-                  {% endif %}
-             </div>
+      {% if is_owner %}
+      <div class="d-grid gap-2 mt-3">
+        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+        <a href="{% url 'upload_work_images' profile.user.username %}" class="btn btn-outline-primary">Manage Work Gallery</a>
+      </div>
+      {% endif %}
+    </div>
+  </aside>
 
+  <section class="col-lg-8">
+    <div class="page-card p-4 mb-4">
+      <h2 class="h5 mb-3">Professional details</h2>
+      <div class="row g-3">
+        <div class="col-md-6"><strong>Location:</strong> {{ profile.location|default:"Not specified" }}</div>
+        <div class="col-md-6"><strong>Mobile:</strong> {{ profile.mobile_number|default:"Not specified" }}</div>
+        <div class="col-md-6"><strong>Education:</strong> {{ profile.education|default:"Not specified" }}</div>
+        <div class="col-md-6"><strong>Experience:</strong> {{ profile.experience }} years</div>
+        <div class="col-12"><strong>Specialties:</strong> {{ profile.dishes|default:"Not specified" }}</div>
+        <div class="col-12"><strong>Email:</strong> {{ profile.user.email|default:"Not specified" }}</div>
+      </div>
+      <hr />
+      <h3 class="h6">Bio</h3>
+      <p class="mb-0">{{ profile.bio|default:"No bio added yet." }}</p>
+    </div>
 
-
-
-              </div>
-
-              <!-- Profile Info -->
-              <div class="col-md-8 p-4">
-                <h5 class="border p-3 rounded">
-                  <span class="text-warning">📍 Location: </span>
-                  {{profile.location }}
-                </h5>
-                <h6 class="border p-3 rounded">
-                  <span class="text-warning">📞 Mobile: </span>{{profile.mobile_number }}
-                </h6>
-                <h6 class="border p-3 rounded">
-                  <span class="text-warning">🎓 Education: </span> {{profile.education }}
-                </h6>
-                <h6 class="border p-3 rounded">
-                  <span class="text-warning">🍳 Specialties: </span>{{profile.dishes }}
-                </h6>
-                <h6 class="border p-3 rounded">
-                  <span class="text-warning">💼 Experience: </span>{{profile.experience }} years
-                </h6>
-                <h6 class="border p-3 rounded">
-                  <span class="text-warning">📧 Email: </span>{{ profile.user.email }}
-                </h6>
-               
-
-                <h3 class="mt-5 text-light">📸 Work Gallery</h3>
-
-                                  {% if is_owner %}
-                                  <a
-                                    href="{% url 'upload_work_images' profile.user.username %}"
-                                    class="btn my-3 btn-outline-warning mt-3"
-                                  >
-                                    📤 Upload Work Images
-                                  </a>
-                                  {% endif %}
-
-                                  <div class="row g-3">
-                                    {% for image in profile.work_images.all %}
-                                    <div class="col-md-4 col-sm-6">
-                                      <div class="gallery-card position-relative overflow-hidden rounded shadow-lg">
-                                        <img
-                                          src="{{ image.image.url }}"
-                                          class="w-100 h-100 gallery-img"
-                                          alt="Work Image"
-                                        />
-                                        <div class="overlay d-flex justify-content-center align-items-center">
-                                          <i class="bi bi-eye fs-3 text-white"></i>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    {% empty %}
-                                    <p class="text-muted fst-italic">No work images uploaded yet.</p>
-                                    {% endfor %}
-                                  </div>
-
-                                      <style>
-                                      .gallery-card {
-                                        height: 250px;
-                                      }
-                                      .gallery-img {
-                                        object-fit: cover;
-                                        transition: transform 0.4s ease;
-                                      }
-                                      .gallery-card:hover .gallery-img {
-                                        transform: scale(1.1);
-                                      }
-                                      .overlay {
-                                        position: absolute;
-                                        top: 0;
-                                        left: 0;
-                                        height: 100%;
-                                        width: 100%;
-                                        background: rgba(0, 0, 0, 0.5);
-                                        opacity: 0;
-                                        transition: opacity 0.4s ease;
-                                      }
-                                      .gallery-card:hover .overlay {
-                                        opacity: 1;
-                                      }
-                                      </style>
-
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="page-card p-4">
+      <h2 class="h5 mb-3">Work gallery</h2>
+      <div class="row g-3">
+        {% for image in profile.work_images.all %}
+        <div class="col-sm-6 col-lg-4">
+          <img src="{{ image.image.url }}" alt="Work sample" class="w-100" style="height:170px;object-fit:cover;border-radius:12px;" loading="lazy" decoding="async" />
         </div>
+        {% empty %}
+        <p class="mb-0 text-muted">No work images uploaded yet.</p>
+        {% endfor %}
       </div>
     </div>
-  </body>
-</html>
+  </section>
+</div>
+{% endblock %}

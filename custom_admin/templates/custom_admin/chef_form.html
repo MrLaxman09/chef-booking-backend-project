@@ -1,11 +1,25 @@
 {% extends "custom_admin/base.html" %}
 {% block title %}{{ action }} Chef{% endblock %}
 {% block content %}
-<h3>{{ action }} Chef</h3>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button class="btn btn-primary">{{ action }}</button>
-  <a class="btn btn-secondary" href="{% url 'custom_admin:chef_list' %}">Cancel</a>
-</form>
+<section class="page-card p-4 mb-4">
+  <h2 class="section-title mb-1">{{ action }} Chef</h2>
+  <p class="section-subtitle mb-0">Fill the required profile details and save.</p>
+</section>
+
+<section class="form-panel" style="max-width:920px;">
+  <form method="post" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="col-md-6">
+      <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors|striptags }}</div>{% endif %}
+    </div>
+    {% endfor %}
+    <div class="col-12">
+      <button class="btn btn-primary">{{ action }} Chef</button>
+      <a class="btn btn-outline-primary ms-2" href="{% url 'custom_admin:chef_list' %}">Cancel</a>
+    </div>
+  </form>
+</section>
 {% endblock %}

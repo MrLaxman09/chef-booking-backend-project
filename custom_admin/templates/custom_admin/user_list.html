@@ -1,61 +1,57 @@
 {% extends "custom_admin/base.html" %}
 {% block title %}Users{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h3>Users</h3>
-  <form method="get" class="d-flex">
-    <input name="q" value="{{ q }}" class="form-control form-control-sm me-2" placeholder="Search by username or location">
-    <button class="btn btn-sm btn-primary">Search</button>
+<section class="page-card p-4 mb-4 d-flex flex-wrap justify-content-between align-items-end gap-3">
+  <div>
+    <h2 class="section-title mb-1">Manage Users</h2>
+    <p class="section-subtitle mb-0">Review profile data, edit records, and activate or deactivate accounts.</p>
+  </div>
+  <form method="get" class="d-flex gap-2" style="max-width:560px; width:100%;">
+    <input name="q" value="{{ q }}" class="form-control" placeholder="Search by username, email, name, location" />
+    <select name="sort" class="form-select" style="max-width: 170px;">
+      <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+      <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
+      <option value="username" {% if sort == 'username' %}selected{% endif %}>Username</option>
+    </select>
+    <button class="btn btn-primary">Apply</button>
   </form>
+</section>
+
+<div class="data-table-wrap">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Username</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for profile in users %}
+      <tr>
+        <td>{{ profile.user.username }}</td>
+        <td>{{ profile.name|default:"Not set" }}</td>
+        <td>{{ profile.user.email|default:"Not set" }}</td>
+        <td>
+          {% if profile.user.is_active %}
+          <span class="status-pill status-accepted">Active</span>
+          {% else %}
+          <span class="status-pill status-rejected">Inactive</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'custom_admin:user_view' profile.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+          <a href="{% url 'custom_admin:user_edit' profile.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+          <form method="post" action="{% url 'custom_admin:user_toggle_active' profile.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-warning">
+              {% if profile.user.is_active %}Deactivate{% else %}Activate{% endif %}
+            </button>
+          </form>
+          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-action="{% url 'custom_admin:user_delete' profile.pk %}" data-name="{{ profile.user.username }}">Delete</button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">No users found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
-<table class="table table-hover">
-  <thead class="table-light">
-    <tr>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Role</th>
-      <th>Location</th>
-      <th>Joined</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for profile in users %}
-    <tr>
-      <td>{{ profile.user.username }}</td>
-      <td>{{ profile.user.email }}</td>
-      <td>
-        {% if profile.is_chef %}
-          <span class="badge bg-info text-dark">Chef</span>
-        {% else %}
-          <span class="badge bg-secondary">User</span>
-        {% endif %}
-      </td>
-      <td>{{ profile.location|default:"—" }}</td>
-      <td>{{ profile.created_at|date:"d M Y" }}</td>
-      <td>
-        <a href="{% url 'custom_admin:user_view' profile.pk %}" class="btn btn-sm btn-outline-primary">View</a>
-        <!-- Optional: add edit/delete if you implement those -->
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="6" class="text-center text-muted">No users found.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<nav>
-  <ul class="pagination">
-    {% if users.has_previous %}
-      <li class="page-item"><a class="page-link" href="?page={{ users.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">Prev</a></li>
-    {% endif %}
-    <li class="page-item disabled"><span class="page-link">Page {{ users.number }} of {{ users.paginator.num_pages }}</span></li>
-    {% if users.has_next %}
-      <li class="page-item"><a class="page-link" href="?page={{ users.next_page_number }}{% if q %}&q={{ q }}{% endif %}">Next</a></li>
-    {% endif %}
-  </ul>
-</nav>
+{% include "custom_admin/partials/pagination.html" with page_obj=users q=q sort=sort %}
+{% include "custom_admin/partials/delete_modal.html" %}
 {% endblock %}

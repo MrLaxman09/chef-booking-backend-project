@@ -1,0 +1,53 @@
+{% extends "custom_admin/base.html" %}
+{% block title %}Blog Posts{% endblock %}
+{% block content %}
+<section class="page-card p-4 mb-4 d-flex flex-wrap justify-content-between align-items-end gap-3">
+  <div>
+    <h2 class="section-title mb-1">Manage Blog Posts</h2>
+    <p class="section-subtitle mb-0">Create, edit, publish, unpublish, and delete posts.</p>
+  </div>
+  <form method="get" class="d-flex gap-2" style="max-width:560px; width:100%;">
+    <input name="q" value="{{ q }}" class="form-control" placeholder="Search by title or content" />
+    <select name="sort" class="form-select" style="max-width: 160px;">
+      <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+      <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
+      <option value="title" {% if sort == 'title' %}selected{% endif %}>Title</option>
+    </select>
+    <button class="btn btn-primary">Apply</button>
+  </form>
+</section>
+
+<div class="mb-3"><a href="{% url 'custom_admin:blog_add' %}" class="btn btn-primary">Create Post</a></div>
+
+<div class="data-table-wrap">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Title</th><th>Author</th><th>Created</th><th>Publish</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for post in posts %}
+      <tr>
+        <td>{{ post.title }}</td>
+        <td>{{ post.author.username }}</td>
+        <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <form method="post" action="{% url 'custom_admin:blog_toggle_publish' post.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm {% if post.is_published %}btn-outline-warning{% else %}btn-outline-success{% endif %}">
+              {% if post.is_published %}Unpublish{% else %}Publish{% endif %}
+            </button>
+          </form>
+        </td>
+        <td>
+          <a href="{% url 'custom_admin:blog_edit' post.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-action="{% url 'custom_admin:blog_delete' post.pk %}" data-name="{{ post.title }}">Delete</button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">No blog posts found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% include "custom_admin/partials/pagination.html" with page_obj=posts q=q sort=sort %}
+{% include "custom_admin/partials/delete_modal.html" %}
+{% endblock %}

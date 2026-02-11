@@ -1,96 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Sign Up · Chef Booking{% endblock %}
+{% load form_extras %}
+{% block title %}Create Account | Chef Booking{% endblock %}
 
 {% block content %}
-<div class="container py-3">
-  <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-9">
-      <div class="login-card bg-white shadow-lg border-0 rounded-4">
-        <div class="card-body p-2">
-          <h2 class="mb-4 text-center fw-bold">Create Your Account</h2>
+<div class="auth-layout">
+  <div class="auth-grid">
+    <aside class="auth-side">
+      <h1 class="h3 mb-3">Create your account</h1>
+      <p class="mb-0">Join to book private chefs, save your profile details, and manage requests from one dashboard.</p>
+    </aside>
 
-          <form method="POST" action="{% url 'signup' %}" novalidate>
-            {% csrf_token %}
+    <section class="form-panel">
+      <h2 class="h4 mb-3">Register</h2>
+      <form method="post" action="{% url 'signup' %}" novalidate>
+        {% csrf_token %}
 
-            {% if form.non_field_errors %}
-              <div class="alert alert-danger">
-                {{ form.non_field_errors }}
-              </div>
-            {% endif %}
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
 
-            <!-- Username -->
-            <div class="form-floating mb-3">
-              <input type="text" name="username" class="form-control" id="id_username" placeholder="Username" required>
-              <label for="id_username">Username</label>
-              {% if form.username.errors %}
-                <div class="text-danger small mt-1">
-                  {{ form.username.errors|striptags }}
-                </div>
-              {% endif %}
-            </div>
-
-            <!-- Email -->
-            <div class="form-floating mb-3">
-              <input type="email" name="email" class="form-control" id="id_email" placeholder="Email" required>
-              <label for="id_email">Email</label>
-              {% if form.email.errors %}
-                <div class="text-danger small mt-1">
-                  {{ form.email.errors|striptags }}
-                </div>
-              {% endif %}
-            </div>
-
-            <!-- Password -->
-            <div class="form-floating mb-3">
-              <input type="password" name="password1" class="form-control" id="id_password1" placeholder="Password" required>
-              <label for="id_password1">Password</label>
-              <div class="form-text">Use at least 8 characters.</div>
-              {% if form.password1.errors %}
-                <div class="text-danger small mt-1">
-                  {{ form.password1.errors|striptags }}
-                </div>
-              {% endif %}
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="form-floating mb-4">
-              <input type="password" name="password2" class="form-control" id="id_password2" placeholder="Confirm Password" required>
-              <label for="id_password2">Confirm Password</label>
-              {% if form.password2.errors %}
-                <div class="text-danger small mt-1">
-                  {{ form.password2.errors|striptags }}
-                </div>
-              {% endif %}
-            </div>
-
-            {% if request.GET.next %}
-              <input type="hidden" name="next" value="{{ request.GET.next }}">
-            {% endif %}
-
-            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
-              Sign Up
-            </button>
-          </form>
-
-          {% if form.errors %}
-            <ul class="text-danger mt-2">
-              {% for field in form %}
-                {% for error in field.errors %}
-                  <li>{{ field.label }}: {{ error }}</li>
-                {% endfor %}
-              {% endfor %}
-            </ul>
-          {% endif %}
-
-          <hr class="my-4" />
-
-          <p class="text-center mb-0">
-            Already have an account?
-            <a href="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="fw-semibold">Login here</a>
-          </p>
+        <div class="mb-3">
+          <label class="form-label" for="id_username">Username</label>
+          {{ form.username|add_class:"form-control" }}
+          {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>{% endif %}
         </div>
-      </div>
-    </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="id_email">Email</label>
+          {{ form.email|add_class:"form-control" }}
+          {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="id_password1">Password</label>
+          {{ form.password1|add_class:"form-control" }}
+          {% if form.password1.errors %}<div class="text-danger small mt-1">{{ form.password1.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="id_password2">Confirm password</label>
+          {{ form.password2|add_class:"form-control" }}
+          {% if form.password2.errors %}<div class="text-danger small mt-1">{{ form.password2.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Create Account</button>
+      </form>
+
+      <p class="mt-3 mb-0">Already registered? <a href="{% url 'login' %}">Sign in</a></p>
+    </section>
   </div>
 </div>
 {% endblock %}

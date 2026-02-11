@@ -1,205 +1,202 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Dashboard</title>
+{% block content %}
+<section class="page-card p-4 mb-4">
+  <h1 class="section-title mb-1">Dashboard</h1>
+  <p class="section-subtitle mb-0">Track active bookings separately from past booking history.</p>
+</section>
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<section class="metric-grid mb-4">
+  <article class="metric-card">
+    <p class="text-muted mb-1">Upcoming bookings you made</p>
+    <h2 class="h4 mb-0">{{ cos_bookings|length }}</h2>
+  </article>
+  <article class="metric-card">
+    <p class="text-muted mb-1">Upcoming requests as chef</p>
+    <h2 class="h4 mb-0">{{ bookings|length }}</h2>
+  </article>
+  <article class="metric-card">
+    <p class="text-muted mb-1">Pending requests</p>
+    <h2 class="h4 mb-0">{{ pending_count }}</h2>
+  </article>
+</section>
 
-  <style>
-    body {
-      background: #f2f4f7;
-    }
+<section class="page-card p-4 mb-4">
+  <h2 class="h5 mb-3">Upcoming requests received as chef</h2>
+  {% if bookings %}
+  <div class="data-table-wrap">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Guests</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.customer.username }}</td>
+          <td>{{ booking.date }}</td>
+          <td>{{ booking.time }}</td>
+          <td>{{ booking.person }}</td>
+          <td>INR {{ booking.total_price }}</td>
+          <td>
+            {% if booking.status == "Pending" %}
+            <span class="status-pill status-pending">Pending</span>
+            {% elif booking.status == "Accepted" %}
+            <span class="status-pill status-accepted">Accepted</span>
+            {% else %}
+            <span class="status-pill status-rejected">Rejected</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if booking.status == "Pending" %}
+            <a href="{% url 'update_booking_status' booking.id 'Accepted' %}" class="btn btn-sm btn-primary">Accept</a>
+            <a href="{% url 'update_booking_status' booking.id 'Rejected' %}" class="btn btn-sm btn-outline-danger ms-1">Reject</a>
+            {% else %}
+            <span class="text-muted">No action</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="mb-0">No upcoming requests are assigned to your chef profile.</p>
+  {% endif %}
+</section>
 
-    .card-hover:hover {
-      transform: translateY(-5px);
-      transition: 0.3s;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-    .table-row:hover {
-      background: rgba(0,0,0,0.05);
-      transition: 0.3s;
-    }
-  </style>
-</head>
+<section class="page-card p-4 mb-4">
+  <h2 class="h5 mb-3">Past requests received as chef</h2>
+  {% if past_bookings %}
+  <div class="data-table-wrap">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Guests</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Tag</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in past_bookings %}
+        <tr>
+          <td>{{ booking.customer.username }}</td>
+          <td>{{ booking.date }}</td>
+          <td>{{ booking.time }}</td>
+          <td>{{ booking.person }}</td>
+          <td>INR {{ booking.total_price }}</td>
+          <td>{{ booking.status }}</td>
+          <td><span class="status-pill status-rejected">Past</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="mb-0">No past requests for your chef profile.</p>
+  {% endif %}
+</section>
 
-<body>
+<section class="page-card p-4 mb-4">
+  <h2 class="h5 mb-3">Upcoming booking requests</h2>
+  {% if cos_bookings %}
+  <div class="data-table-wrap">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Chef</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Guests</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in cos_bookings %}
+        <tr>
+          <td>{{ booking.chef.name }}</td>
+          <td>{{ booking.date }}</td>
+          <td>{{ booking.time }}</td>
+          <td>{{ booking.person }}</td>
+          <td>INR {{ booking.total_price }}</td>
+          <td>
+            {% if booking.status == "Pending" %}
+            <span class="status-pill status-pending">Pending</span>
+            {% elif booking.status == "Accepted" %}
+            <span class="status-pill status-accepted">Accepted</span>
+            {% else %}
+            <span class="status-pill status-rejected">Rejected</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="mb-2">You have no upcoming booking requests.</p>
+  <a href="{% url 'chef_list' %}" class="btn btn-primary">Browse Chefs</a>
+  {% endif %}
+</section>
 
-  <!-- HEADER -->
-  <nav class="navbar navbar-dark bg-dark px-4 py-3 mb-4">
-     {% if not user.chef %}
-    <span class="navbar-brand h1"> User Dashboard</span>
-    {% else %}
-    <span class="navbar-brand h1"> Chef Dashboard</span>
+<section class="page-card p-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h5 mb-0">Past bookings</h2>
+    {% if past_cos_bookings %}
+    <form method="post" action="{% url 'clear_past_bookings' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Remove all past bookings from your list?')">Clear Past Bookings</button>
+    </form>
     {% endif %}
-
-  </nav>
-
-  <div class="container">
-
-    <!-- DASHBOARD STAT CARDS -->
-    <div class="row g-4 mb-4">
-
-      <div class="col-md-4">
-        <div class="card card-hover shadow border-0 p-3">
-          <div class="d-flex justify-content-between">
-            <div>
-              <h6 class="text-secondary mb-1">You Booked Chefs</h6>
-              <h3 class="fw-bold">{{ cos_bookings|length }}</h3>
-            </div>
-            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-              style="width:55px;height:55px;">
-     
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card card-hover shadow border-0 p-3">
-          <div class="d-flex justify-content-between">
-            <div>
-              <h6 class="text-secondary mb-1">Customers Booked You</h6>
-              <h3 class="fw-bold">{{ bookings|length }}</h3>
-            </div>
-            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
-              style="width:55px;height:55px;">
-              🧑‍🍳
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card card-hover shadow border-0 p-3">
-          <div class="d-flex justify-content-between">
-            <div>
-              <h6 class="text-secondary mb-1">Pending Requests</h6>
-              <h3 class="fw-bold">{{ pending_count }}</h3>
-
-            </div>
-            <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center"
-              style="width:55px;height:55px;">
-            
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- SECTION 1 - BOOKINGS FROM CUSTOMERS -->
-    <div class="card shadow border-0 p-3 mb-5">
-      <h3 class="fw-bold mb-3">Bookings From Customers</h3>
-      <p class="text-secondary mb-4">Approve or reject chef hiring requests.</p>
-
-      {% if bookings %}
-      <div class="table-responsive">
-        <table class="table table-hover align-middle">
-          <thead class="table-dark">
-            <tr>
-              <th style="min-width:120px;"> Customer</th>
-            <th style="min-width:150px;"> Date</th>
-            <th style="min-width:110px;"> Time</th>
-            <th style="min-width:110px;"> Persons</th>
-            <th style="min-width:130px;">Total Price</th>
-            <th style="min-width:120px;">Status</th>
-            <th style="min-width:220px;" class="text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for booking in bookings %}
-            <tr class="table-row">
-              <td class="fw-semibold">{{ booking.customer.username }}</td>
-              <td>{{ booking.date }}</td>
-              <td>{{ booking.time }}</td>
-              <td>{{ booking.person }}</td>
-              <td class="fw-bold text-success">₹{{ booking.total_price }}</td>
-              <td>
-                {% if booking.status == "Pending" %}
-                  <span class="badge bg-warning text-dark"> Pending</span>
-                {% elif booking.status == "Accepted" %}
-                  <span class="badge bg-success">Accepted</span>
-                {% elif booking.status == "Rejected" %}
-                  <span class="badge bg-danger"> Rejected</span>
-                {% endif %}
-              </td>
-              <td class="text-center">
-                {% if booking.status == "Pending" %}
-                  <a href="{% url 'update_booking_status' booking.id 'Accepted' %}" class="btn btn-success btn-sm me-2">Accept</a>
-                  <a href="{% url 'update_booking_status' booking.id 'Rejected' %}" class="btn btn-danger btn-sm">Reject</a>
-                {% else %}
-                  <span class="text-muted">No Action</span>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="alert alert-info text-center">No customer bookings found.</div>
-      {% endif %}
-    </div>
-
-    {% comment %} {% if not user.chef %} {% endcomment %}
-    <!-- SECTION 2 - MY BOOKINGS -->
-    <div class="card shadow border-0 p-3 mb-5">
-      <h3 class="fw-bold mb-3">📋 My Chef Bookings</h3>
-      <p class="text-secondary mb-4">Track all chefs you have booked.</p>
-
-      {% if cos_bookings %}
-      <div class="table-responsive">
-        <table class="table table-hover align-middle">
-          <thead class="table-primary text-center">
-            <tr>
-            <th style="min-width:120px;">👨‍🍳 Chef</th>
-            <th style="min-width:120px;">📅 Date</th>
-            <th style="min-width:120px;">⏰ Time</th>
-            <th style="min-width:120px;">⏳ Persons</th>
-            <th style="min-width:180px;">💵 Total Price</th>
-            <th style="min-width:120px;">Status</th>
-            </tr>
-          </thead>
-          <tbody class="text-center">
-            {% for booking in cos_bookings %}
-            <tr class="table-row">
-              <td class="fw-bold">{{ booking.chef.name }}</td>
-              <td>{{ booking.date }}</td>
-              <td>{{ booking.time }}</td>
-              <td>{{ booking.person }}</td>
-              <td class="fw-bold text-success">₹{{ booking.total_price }}</td>
-              <td>
-                {% if booking.status == "Pending" %}
-                  <span class="badge bg-warning text-dark">⏳ Pending</span>
-                {% elif booking.status == "Accepted" %}
-                  <span class="badge bg-success">✅ Confirmed</span>
-                {% elif booking.status == "Rejected" %}
-                  <span class="badge bg-danger">❌ Rejected</span>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="text-center">
-        <img src="https://cdn-icons-png.flaticon.com/512/4076/4076504.png"
-          width="110" class="mb-3">
-        <h4 class="fw-bold text-muted">No Bookings Yet</h4>
-        <a href="{% url 'chef_list' %}" class="btn btn-primary mt-2">Book a Chef</a>
-      </div>
-      {% endif %}
-    </div>
-    {% comment %} {% else %}
-    {% endif %} {% endcomment %}
-
   </div>
 
-</body>
-
-</html>
+  {% if past_cos_bookings %}
+  <div class="data-table-wrap">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Chef</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+          <th>Tag</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in past_cos_bookings %}
+        <tr id="past-booking-{{ booking.id }}">
+          <td>{{ booking.chef.name }}</td>
+          <td>{{ booking.date }}</td>
+          <td>{{ booking.time }}</td>
+          <td>{{ booking.status }}</td>
+          <td><span class="status-pill status-rejected">Past</span></td>
+          <td>
+            <form method="post" action="{% url 'remove_booking' booking.id %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('This will remove the booking from your list. Continue?')">Remove from List</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="mb-0">No past bookings available.</p>
+  {% endif %}
+</section>
+{% endblock %}

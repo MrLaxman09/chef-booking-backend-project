@@ -1,64 +1,55 @@
 {% extends "custom_admin/base.html" %}
+{% load static %}
 {% block title %}User Profile{% endblock %}
 {% block content %}
-<div class="row">
-  <div class="col-md-4">
-    <div class="card mb-3 text-center p-3">
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="page-card p-4 text-center">
       {% if profile.profile_image %}
-        <img src="{{ profile.profile_image.url }}" alt="Profile" class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;">
+      <img src="{{ profile.profile_image.url }}" alt="Profile" style="width:120px;height:120px;object-fit:cover;border-radius:50%;" loading="lazy" />
       {% else %}
-        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:120px;height:120px;">
-          <span class="fs-3 text-muted">{{ profile.user.username|first|upper }}</span>
-        </div>
+      <img src="{% static 'images/default-chef.jpg' %}" alt="Profile" style="width:120px;height:120px;object-fit:cover;border-radius:50%;" loading="lazy" />
       {% endif %}
-      <h5 class="fw-bold">{{ profile.user.username }}</h5>
-      <p class="text-muted mb-1">{{ profile.location|default:"Location not set" }}</p>
-      {% if profile.is_chef %}
-        <span class="badge bg-info text-dark">Chef</span>
+      <h2 class="h5 mt-3 mb-1">{{ profile.user.username }}</h2>
+      <p class="text-muted mb-2">{{ profile.location|default:"Location not set" }}</p>
+      {% if profile.user.is_active %}
+      <span class="status-pill status-accepted">Active</span>
       {% else %}
-        <span class="badge bg-secondary">User</span>
+      <span class="status-pill status-rejected">Inactive</span>
       {% endif %}
-      <div class="mt-3">
-        <a href="{% url 'custom_admin:user_list' %}" class="btn btn-secondary btn-sm">Back to Users</a>
-        <!-- Optional admin actions:
-        <a href="{% url 'custom_admin:user_edit' profile.pk %}" class="btn btn-warning btn-sm">Edit</a>
-        <a href="{% url 'custom_admin:user_delete' profile.pk %}" class="btn btn-danger btn-sm">Delete</a>
-        -->
+      <div class="mt-3 d-flex gap-2 justify-content-center">
+        <a href="{% url 'custom_admin:user_edit' profile.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+        <a href="{% url 'custom_admin:user_list' %}" class="btn btn-outline-secondary btn-sm">Back</a>
       </div>
     </div>
   </div>
 
-  <div class="col-md-8">
-    <div class="card p-3 mb-3">
-      <h5>Details</h5>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Full name:</strong> {{ profile.full_name|default:"—" }}</li>
-        <li class="list-group-item"><strong>Email:</strong> {{ profile.user.email }}</li>
-        <li class="list-group-item"><strong>Mobile:</strong> {{ profile.mobile_number|default:"—" }}</li>
-        <li class="list-group-item"><strong>Bio:</strong> {{ profile.bio|default:"—" }}</li>
-        <li class="list-group-item"><strong>LinkedIn:</strong>
-          {% if profile.linkedin %}<a href="{{ profile.linkedin }}" target="_blank">{{ profile.linkedin }}</a>{% else %}—{% endif %}
-        </li>
-      </ul>
+  <div class="col-lg-8">
+    <div class="page-card p-4 mb-4">
+      <h3 class="h5 mb-3">Profile Details</h3>
+      <div class="row g-2">
+        <div class="col-md-6"><strong>Name:</strong> {{ profile.name|default:"Not set" }}</div>
+        <div class="col-md-6"><strong>Email:</strong> {{ profile.user.email|default:"Not set" }}</div>
+        <div class="col-md-6"><strong>Mobile:</strong> {{ profile.mobile_number|default:"Not set" }}</div>
+        <div class="col-md-6"><strong>Experience:</strong> {{ profile.experience }} years</div>
+        <div class="col-12"><strong>Bio:</strong> {{ profile.bio|default:"No bio" }}</div>
+      </div>
     </div>
 
-    <div class="card p-3">
-      <h5>Recent Bookings (as Customer)</h5>
-      <table class="table table-sm mb-0">
-        <thead class="table-light"><tr><th>Booking #</th><th>Chef</th><th>Date</th><th>Status</th></tr></thead>
-        <tbody>
-          {% for b in profile.user.booking_set.all|slice:":8" %}
-          <tr>
-            <td>{{ b.pk }}</td>
-            <td>{{ b.chef.name }}</td>
-            <td>{{ b.date }}</td>
-            <td>{{ b.status }}</td>
-          </tr>
-          {% empty %}
-          <tr><td colspan="4">No bookings by this user.</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="page-card p-4">
+      <h3 class="h5 mb-3">Recent Bookings (as Customer)</h3>
+      <div class="data-table-wrap">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>Booking #</th><th>Chef</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for b in recent_bookings %}
+            <tr><td>{{ b.pk }}</td><td>{{ b.chef.name }}</td><td>{{ b.date }}</td><td>{{ b.status }}</td></tr>
+            {% empty %}
+            <tr><td colspan="4">No bookings by this user.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

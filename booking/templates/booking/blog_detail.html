@@ -3,39 +3,17 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-
-  <!-- Blog Hero Card -->
-  <div class="card shadow-lg border-0 rounded-4 overflow-hidden bg-dark text-light">
-
-    <!-- Blog Image -->
-    {% if post.image %}
-      <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height:500px; object-fit:fill;">
-    {% else %}
-      <img src="{% static 'default-blog.jpg' %}" class="card-img-top" alt="Blog" style="height:400px; object-fit:cover;">
-    {% endif %}
-
-    <div class="card-body p-4">
-      <!-- Title -->
-      <h1 class="fw-bold text-warning">{{ post.title }}</h1>
-
-      <!-- Author + Date -->
-      <p class="text-info mb-4">
-         <b>{{ post.author.username }}</b> |  {{ post.created_at|date:"F d, Y" }}
-      </p>
-
-      <!-- Content -->
-      <div class="content fs-5 lh-lg text-light">
-        {{ post.content|linebreaks }}
-      </div>
-
-      <!-- Back Button -->
-      <div class="mt-4">
-        <a href="{% url 'blog_list' %}" class="btn btn-outline-warning rounded-pill">
-          ← Back to Blogs
-        </a>
-      </div>
-    </div>
+<article class="page-card overflow-hidden">
+  {% if post.image %}
+  <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width:100%; max-height:460px; object-fit:cover;" decoding="async" />
+  {% else %}
+  <img src="{% static 'images/default.webp' %}" alt="Blog image" style="width:100%; max-height:380px; object-fit:cover;" decoding="async" />
+  {% endif %}
+  <div class="p-4 p-lg-5">
+    <p class="text-muted mb-2">By {{ post.author.username }} | {{ post.created_at|date:"F d, Y" }}</p>
+    <h1 class="section-title">{{ post.title }}</h1>
+    <div class="mt-3">{{ post.content|linebreaks }}</div>
+    <a href="{% url 'blog_list' %}" class="btn btn-outline-primary mt-3">Back to Blog</a>
   </div>
-</div>
+</article>
 {% endblock %}

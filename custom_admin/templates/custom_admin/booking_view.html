@@ -1,15 +1,32 @@
 {% extends "custom_admin/base.html" %}
-{% block title %}Booking {% endblock %}
+{% block title %}Booking Details{% endblock %}
 {% block content %}
-<h3>Booking #{{ booking.pk }}</h3>
-<ul class="list-group">
-  <li class="list-group-item"><strong>Customer:</strong> {{ booking.customer.username }}</li>
-  <li class="list-group-item"><strong>Chef:</strong> {{ booking.chef.name }}</li>
-  <li class="list-group-item"><strong>Date:</strong> {{ booking.date }} {{ booking.time }}</li>
-  <li class="list-group-item"><strong>Persons:</strong> {{ booking.person }}</li>
-  <li class="list-group-item"><strong>Total Price:</strong> ₹{{ booking.total_price }}</li>
-  <li class="list-group-item"><strong>Status:</strong> {{ booking.status }}</li>
-  <li class="list-group-item"><strong>Notes:</strong><br>{{ booking.notes }}</li>
-</ul>
-<a href="{% url 'custom_admin:booking_list' %}" class="btn btn-secondary mt-3">Back</a>
+<div class="page-card p-4" style="max-width:920px;">
+  <h2 class="h4 mb-3">Booking #{{ booking.pk }}</h2>
+  <ul class="list-group list-group-flush mb-3">
+    <li class="list-group-item"><strong>Customer:</strong> {{ booking.customer.username }}</li>
+    <li class="list-group-item"><strong>Chef:</strong> {{ booking.chef.name }}</li>
+    <li class="list-group-item"><strong>Date:</strong> {{ booking.date }} {{ booking.time }}</li>
+    <li class="list-group-item"><strong>Guests:</strong> {{ booking.person }}</li>
+    <li class="list-group-item"><strong>Total Price:</strong> INR {{ booking.total_price }}</li>
+    <li class="list-group-item"><strong>Status:</strong> {{ booking.status }}</li>
+    <li class="list-group-item"><strong>Timeline:</strong> {% if booking.is_deleted %}Archived{% elif booking.is_past %}Past{% else %}Upcoming{% endif %}</li>
+  </ul>
+
+  {% if not booking.is_deleted %}
+  <form method="post" action="{% url 'custom_admin:booking_update_status' booking.pk %}" class="d-flex gap-2 align-items-end">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{% url 'custom_admin:booking_view' booking.pk %}" />
+    <div>
+      <label class="form-label">Update status</label>
+      {{ status_form.status }}
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+  </form>
+  {% else %}
+  <p class="text-muted">Archived bookings cannot be updated.</p>
+  {% endif %}
+
+  <a href="{% url 'custom_admin:booking_list' %}" class="btn btn-outline-primary mt-3">Back to List</a>
+</div>
 {% endblock %}

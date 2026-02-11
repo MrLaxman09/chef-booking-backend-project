@@ -2,89 +2,55 @@
 {% block title %}Book {{ chef.name }}{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center my-5">
-  <div class="col-md-8 col-lg-9">
-    <div class="bg-white shadow-lg border-0 rounded-4">
-      <div class="card-body p-4">
-        <h3 class="mb-4 text-center fw-bold"> Book <span class="text-primary">{{ chef.name }}</span></h3>
+<div class="row g-4">
+  <section class="col-lg-7">
+    <div class="form-panel h-100">
+      <h1 class="section-title">Book {{ chef.name }}</h1>
+      <p class="section-subtitle">Submit your preferred date, time, and guest count. The chef can accept or reject from their dashboard.</p>
 
-        <!-- Chef Info -->
-        <ul class="list-group list-group-flush mb-4">
-          <li class="list-group-item"><strong>Specialty:</strong> {{ chef.specialty }}</li>
-          <li class="list-group-item"><strong>Experience:</strong> {{ chef.experience }} years</li>
-          <li class="list-group-item"><strong>Team Members:</strong> {{ chef.team_members }}</li>
-          <li class="list-group-item text-success fw-semibold">₹{{ chef.price_per_person }} / person</li>
-        </ul>
-
-        <!-- Booking Form -->
-        <form method="post" class="mt-4">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label class="form-label"> Date</label>
-            <input type="date" name="date" class="form-control rounded-3" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label"> Time</label>
-            <input type="time" name="time" class="form-control rounded-3" required>
-          </div>
-
-          <div class="mb-4">
-            <label class="form-label"> Persons</label>
-            <input type="number" name="person" class="form-control rounded-3" min="2" required>
-          </div>
-
-          <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-semibold">
-            ✅ Confirm Booking
-          </button>
-        </form>
-      </div>
+      <form method="post" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-6">
+          <label for="id_date" class="form-label">Date</label>
+          <input id="id_date" name="date" type="date" class="form-control" required />
+        </div>
+        <div class="col-md-6">
+          <label for="id_time" class="form-label">Time</label>
+          <input id="id_time" name="time" type="time" class="form-control" required />
+        </div>
+        <div class="col-md-6">
+          <label for="id_person" class="form-label">Guests</label>
+          <input id="id_person" name="person" type="number" min="1" value="2" class="form-control" required />
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Send Booking Request</button>
+          <a href="{% url 'chef_list' %}" class="btn btn-outline-primary ms-2">Back to Chefs</a>
+        </div>
+      </form>
     </div>
+  </section>
 
-    <!-- About Chef Section -->
-    <div class="card shadow-lg border-0 rounded-4 mt-5">
-      <div class="card-body p-4">
-        <h4 class="fw-bold mb-3">ℹ️ About {{ chef.name }}</h4>
-        <p class="text-muted">
-          {{ chef.bio|default:"This chef is highly experienced and passionate about delivering the best food experience at your home or event." }}
-        </p>
-        <p><strong>Education:</strong> {{ chef.education|default:"Not Provided" }}</p>
-        <p><strong>Location:</strong> {{ chef.location|default:"Available across your city" }}</p>
-      </div>
+  <aside class="col-lg-5">
+    <div class="page-card p-4 h-100">
+      <h2 class="h5 mb-3">Chef details</h2>
+      <p class="mb-2"><strong>Name:</strong> {{ chef.name }}</p>
+      <p class="mb-2"><strong>Specialty:</strong> {{ chef.specialty }}</p>
+      <p class="mb-2"><strong>Experience:</strong> {{ chef.experience }} years</p>
+      <p class="mb-2"><strong>Team members:</strong> {{ chef.team_members|default:"Not listed" }}</p>
+      <p class="mb-3"><strong>Price:</strong> INR {{ chef.price_per_person }} per person</p>
+      <hr />
+      <p class="mb-0 text-muted">After submission, you can track status from your dashboard.</p>
     </div>
-
-    <!-- Special Instructions -->
-    <div class="card shadow-lg border-0 rounded-4 mt-5">
-      <div class="card-body p-4">
-        <h4 class="fw-bold mb-3">Special Instructions</h4>
-        <p class="text-muted">Please mention any dietary preferences, allergies, or special requests after booking. The chef will contact you before the event to confirm details.</p>
-      </div>
-    </div>
-
-    <!-- FAQs -->
-    <div class="card shadow-lg border-0 rounded-4 mt-5">
-      <div class="card-body p-4">
-        <h4 class="fw-bold mb-3"> Frequently Asked Questions</h4>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><strong>Q:</strong> Can I cancel the booking?<br><strong>A:</strong> Yes, cancellation is free up to 24 hours before the event.</li>
-          <li class="list-group-item"><strong>Q:</strong> Do I need to arrange ingredients?<br><strong>A:</strong> The chef will inform you beforehand. Ingredients cost may vary.</li>
-          <li class="list-group-item"><strong>Q:</strong> Can the chef handle large parties?<br><strong>A:</strong> Yes, team members will assist for bigger gatherings.</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Cancellation Policy -->
-    <div class="card shadow-lg border-0 rounded-4 mt-5 mb-5">
-      <div class="card-body p-4">
-        <h4 class="fw-bold mb-3"> Cancellation & Refund Policy</h4>
-        <p class="text-muted">
-          -  Full refund if cancelled 24 hours before the event.<br>
-          -  50% refund if cancelled within 12 hours.<br>
-          -  No refund for last-minute cancellations.
-        </p>
-      </div>
-    </div>
-
-  </div>
+  </aside>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const dateInput = document.getElementById("id_date");
+  if (dateInput) {
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.min = today;
+  }
+</script>
 {% endblock %}

@@ -1,45 +1,38 @@
 {% extends "custom_admin/base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<h2 class="mb-3">Dashboard</h2>
+<section class="page-card p-4 mb-4">
+  <h2 class="section-title mb-1">Admin Overview</h2>
+  <p class="section-subtitle mb-0">Manage chefs, bookings, blog content, and user accounts.</p>
+</section>
 
-<div class="row g-3 mb-4">
-  <div class="col-md-3">
-    <div class="card p-3">
-      <small class="text-muted">Chefs</small>
-      <h3 class="fw-bold">{{ chefs_count }}</h3>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card p-3">
-      <small class="text-muted">Bookings</small>
-      <h3 class="fw-bold">{{ bookings_count }}</h3>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card p-3">
-      <small class="text-muted">Users</small>
-      <h3 class="fw-bold">{{ users_count }}</h3>
-    </div>
-  </div>
-</div>
+<section class="metric-grid mb-4">
+  <article class="metric-card"><p class="text-muted mb-1">Chefs</p><h3 class="mb-0">{{ chefs_count }}</h3></article>
+  <article class="metric-card"><p class="text-muted mb-1">Bookings</p><h3 class="mb-0">{{ bookings_count }}</h3></article>
+  <article class="metric-card"><p class="text-muted mb-1">Users</p><h3 class="mb-0">{{ users_count }}</h3></article>
+  <article class="metric-card"><p class="text-muted mb-1">Published Blogs</p><h3 class="mb-0">{{ published_blog_count }} / {{ blog_count }}</h3></article>
+</section>
 
-<h5>Recent Bookings</h5>
-<table class="table table-sm">
-  <thead class="table-light">
-    <tr><th>Customer</th><th>Chef</th><th>Date</th><th>Status</th></tr>
-  </thead>
-  <tbody>
-    {% for b in recent_bookings %}
-      <tr>
-        <td>{{ b.customer.username }}</td>
-        <td>{{ b.chef.name }}</td>
-        <td>{{ b.date }}</td>
-        <td>{{ b.status }}</td>
-      </tr>
-    {% empty %}
-      <tr><td colspan="4">No recent bookings</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+<section class="page-card p-4">
+  <h3 class="h5 mb-3">Recent Bookings</h3>
+  <div class="data-table-wrap">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr><th>Customer</th><th>Chef</th><th>Date</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        {% for b in recent_bookings %}
+        <tr>
+          <td>{{ b.customer.username }}</td>
+          <td>{{ b.chef.name }}</td>
+          <td>{{ b.date }} {{ b.time }}</td>
+          <td>{{ b.status }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No bookings available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}

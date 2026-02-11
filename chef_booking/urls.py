@@ -19,6 +19,8 @@ urlpatterns = [
     path('chefs/', booking_views.chef_list, name='chef_list'),
     path('dashboard/', booking_views.dashboard, name='dashboard'),
     path('book/<int:chef_id>/', booking_views.book_chef, name='book_chef'),
+    path('bookings/remove/<int:booking_id>/', booking_views.remove_booking, name='remove_booking'),
+    path('bookings/clear-past/', booking_views.clear_past_bookings, name='clear_past_bookings'),
 
     # Booking and Chef Actions
     path('become-chef/', booking_views.become_chef, name='become_chef'),
@@ -28,6 +30,7 @@ urlpatterns = [
 
 
     # User Auth
+    path('accounts/login/', accounts_views.RoleAwareLoginView.as_view(), name='login'),
     path('accounts/', include('django.contrib.auth.urls')),  # Login, logout, password reset
     path('signup/', accounts_views.signup, name='signup'),
     path('user_profile/', booking_views.user_profile, name='user_profile'),

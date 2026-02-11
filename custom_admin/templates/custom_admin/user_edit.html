@@ -1,82 +1,42 @@
 {% extends "custom_admin/base.html" %}
-{% load static %}
-
+{% block title %}Edit User{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Edit User</h4>
-        </div>
-        <div class="card-body">
+<section class="page-card p-4 mb-4">
+  <h2 class="section-title mb-1">Edit User</h2>
+  <p class="section-subtitle mb-0">Update account and profile fields.</p>
+</section>
 
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-
-                <!-- Profile Image -->
-                <div class="text-center mb-3">
-                    {% if user.profile.profile_image %}
-                        <img src="{{ user.profile.profile_image.url }}" class="rounded-circle" width="120" height="120">
-                    {% else %}
-                        <img src="{% static 'default-user.png' %}" class="rounded-circle" width="120" height="120">
-                    {% endif %}
-                </div>
-
-                <!-- Username -->
-                <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" value="{{ user.username }}" required>
-                </div>
-
-                <!-- Full Name -->
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="name" class="form-control" value="{{ user.profile.name }}">
-                </div>
-
-                <!-- Email -->
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
-                </div>
-
-                <!-- Mobile -->
-                <div class="mb-3">
-                    <label class="form-label">Mobile Number</label>
-                    <input type="text" name="mobile" class="form-control" value="{{ user.profile.mobile }}">
-                </div>
-
-                <!-- Role -->
-                <div class="mb-3">
-                    <label class="form-label">User Role</label>
-                    <select name="role" class="form-select">
-                        <option value="customer" {% if user.profile.role == "customer" %}selected{% endif %}>Customer</option>
-                        <option value="chef" {% if user.profile.role == "chef" %}selected{% endif %}>Chef</option>
-                        <option value="admin" {% if user.profile.role == "admin" %}selected{% endif %}>Admin</option>
-                    </select>
-                </div>
-
-                <!-- Status -->
-                <div class="mb-3">
-                    <label class="form-label">Account Status</label>
-                    <select name="status" class="form-select">
-                        <option value="active" {% if user.profile.status == "active" %}selected{% endif %}>Active</option>
-                        <option value="blocked" {% if user.profile.status == "blocked" %}selected{% endif %}>Blocked</option>
-                    </select>
-                </div>
-
-                <!-- Bio -->
-                <div class="mb-3">
-                    <label class="form-label">Bio</label>
-                    <textarea name="bio" class="form-control" rows="3">{{ user.profile.bio }}</textarea>
-                </div>
-
-                <!-- Update Button -->
-                <button type="submit" class="btn btn-primary px-4">Update User</button>
-
-                <a href="{% url 'admin_user_list' %}" class="btn btn-secondary px-4">Cancel</a>
-            </form>
-
-        </div>
+<section class="form-panel" style="max-width:900px;">
+  <form method="post" class="row g-3">
+    {% csrf_token %}
+    <div class="col-md-6">
+      <label class="form-label">Username</label>
+      <input type="text" name="username" class="form-control" value="{{ profile.user.username }}" required />
     </div>
-</div>
+    <div class="col-md-6">
+      <label class="form-label">Email</label>
+      <input type="email" name="email" class="form-control" value="{{ profile.user.email }}" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Full Name</label>
+      <input type="text" name="name" class="form-control" value="{{ profile.name }}" />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Mobile Number</label>
+      <input type="text" name="mobile_number" class="form-control" value="{{ profile.mobile_number }}" />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Location</label>
+      <input type="text" name="location" class="form-control" value="{{ profile.location }}" />
+    </div>
+    <div class="col-12">
+      <label class="form-label">Bio</label>
+      <textarea name="bio" class="form-control" rows="4">{{ profile.bio }}</textarea>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="{% url 'custom_admin:user_view' profile.pk %}" class="btn btn-outline-primary ms-2">Cancel</a>
+    </div>
+  </form>
+</section>
 {% endblock %}

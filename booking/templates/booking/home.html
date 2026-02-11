@@ -1,143 +1,76 @@
 {% extends "base.html" %}
-{% block title %}Home · Chef Booking{% endblock %}
+{% block title %}Chef Booking | Book Trusted Private Chefs{% endblock %}
 
 {% block content %}
-
-<!-- HERO SECTION -->
-<section class="text-center text-white py-5 hero-section">
-  <div class="container">
-    <h1 class="display-3 fw-bold mb-3">
-      🍽️ Welcome to <span class="text-warning">Chef Booking</span>
-    </h1>
-    <p class="lead mb-4">Hire top chefs for your parties, events, and personal dining experience.</p>
-
-    {% if user.is_authenticated %}
-      <a href="{% url 'chef_list' %}" class="btn btn-lg btn-warning shadow px-4 py-2 me-2">👨‍🍳 View Chefs</a>
-      {# <a href="{% url 'profile' user.username %}" class="btn btn-lg btn-outline-light shadow px-4 py-2">👤 My Profile</a> #}
-    {% else %}
-      <a href="{% url 'login' %}" class="btn btn-lg btn-outline-light shadow px-4 py-2 me-2">🔐 Login</a>
-      <a href="{% url 'signup' %}" class="btn btn-lg btn-warning shadow px-4 py-2">📝 Signup</a>
-    {% endif %}
-  </div>
-</section>
-
-<style>
-.hero-section {
-  position: relative;
-  background: url("https://static.wixstatic.com/media/4ed3f1_43a9935160a44f3a965224147e50069c~mv2.png/v1/fill/w_1901,h_641,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/4ed3f1_43a9935160a44f3a965224147e50069c~mv2.png") no-repeat center center/cover;
-  min-height: 70vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to right, rgba(72, 72, 34, 0.8), rgba(11, 2, 55, 0.52));
-  z-index: 1;
-}
-
-.hero-section .container {
-  position: relative;
-  z-index: 2;
-}
-</style>
-
-
-<!-- FEATURES SECTION -->
-<section class="py-5 bg-light">
-  <div class="container text-center">
-    <h2 class="fw-bold mb-5">✨ Why Choose <span class="text-primary">Chef Booking?</span></h2>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card shadow border-0 h-100">
-          <div class="card-body">
-            <h3 class="text-warning">⭐ Verified Chefs</h3>
-            <p>All chefs are verified professionals with years of culinary experience.</p>
-          </div>
-        </div>
+<section class="hero mb-4">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-7">
+      <span class="badge-soft mb-3">Private Chef Marketplace</span>
+      <h1 class="mb-3">Book experienced chefs for home dining and events.</h1>
+      <p class="mb-4">Compare chef specialties, review profiles, and send booking requests in minutes. Built for families, hosts, and event planners who need reliable service.</p>
+      <div class="d-flex flex-wrap gap-2">
+        {% if user.is_authenticated %}
+        <a href="{% url 'chef_list' %}" class="btn btn-light">Browse Chefs</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-light">Open Dashboard</a>
+        {% else %}
+        <a href="{% url 'signup' %}" class="btn btn-light">Create Account</a>
+        <a href="{% url 'login' %}" class="btn btn-outline-light">Sign In</a>
+        {% endif %}
       </div>
-      <div class="col-md-4">
-        <div class="card shadow border-0 h-100">
-          <div class="card-body">
-            <h3 class="text-success">🍴 Wide Variety</h3>
-            <p>From Indian to Italian, Chinese to Continental — book chefs from multiple cuisines.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card shadow border-0 h-100">
-          <div class="card-body">
-            <h3 class="text-primary">⏱️ Easy Booking</h3>
-            <p>Quick and hassle-free booking with just a few clicks. Perfect for any occasion.</p>
-          </div>
-        </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="metric-grid">
+        <article class="metric-card">
+          <p class="mb-1 text-muted">Verified Profiles</p>
+          <h3 class="mb-0 text-info">Chef-first vetting</h3>
+        </article>
+        <article class="metric-card">
+          <p class="mb-1 text-muted">Clear Pricing</p>
+          <h3 class="mb-0 text-info">Per-person estimates</h3>
+        </article>
+        <article class="metric-card">
+          <p class="mb-1 text-muted">Fast Workflow</p>
+          <h3 class="mb-0 text-info">Request in under 2 minutes</h3>
+        </article>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ABOUT SECTION -->
-<section class="py-5">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <img src="https://images.unsplash.com/photo-1556912173-3bb406ef7e77" class="img-fluid rounded shadow" alt="chef cooking">
+<section class="page-card p-4 mb-4">
+  <h2 class="section-title">Why people use Chef Booking</h2>
+  <p class="section-subtitle">The platform is designed for confidence, speed, and practical planning.</p>
+  <div class="content-grid">
+    <article class="content-card">
+      <div class="card-body-tight">
+        <h3 class="h5">Transparent profiles</h3>
+        <p class="mb-0">Each profile includes specialties, years of experience, team size, and pricing details.</p>
       </div>
-      <div class="col-md-6">
-        <h2 class="fw-bold mb-3">👨‍🍳 About Us</h2>
-        <p class="text-primary">Chef Booking is your one-stop platform to hire the best chefs in town for any event. Whether it's a wedding, birthday, corporate event, or private dinner — we've got you covered.</p>
-        <a href="{% url 'chef_list' %}" class="btn btn-primary mt-3">Explore Chefs</a>
+    </article>
+    <article class="content-card">
+      <div class="card-body-tight">
+        <h3 class="h5">Simple booking flow</h3>
+        <p class="mb-0">Select a date, preferred time, and guest count. Your request is sent directly to the chef.</p>
       </div>
+    </article>
+    <article class="content-card">
+      <div class="card-body-tight">
+        <h3 class="h5">Unified dashboard</h3>
+        <p class="mb-0">Track requests as a customer and incoming bookings as a chef from one place.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="page-card p-4">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-8">
+      <h2 class="section-title">Ready to plan your next meal service?</h2>
+      <p class="section-subtitle mb-0">Start by exploring the chef directory and filtering by cuisine or experience.</p>
+    </div>
+    <div class="col-lg-4 text-lg-end">
+      <a href="{% if user.is_authenticated %}{% url 'chef_list' %}{% else %}{% url 'login' %}{% endif %}" class="btn btn-primary">Get Started</a>
     </div>
   </div>
 </section>
-
-<!-- TESTIMONIALS -->
-<section class="py-5 bg-light">
-  <div class="container text-center">
-    <h2 class="fw-bold mb-5">💬 What Our Customers Say</h2>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card shadow border-0">
-          <div class="card-body">
-            <p>“Amazing experience! The chef cooked at our home and it felt like a 5-star restaurant.”</p>
-            <h6 class="fw-bold text-primary">- Priya Sharma</h6>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card shadow border-0">
-          <div class="card-body">
-            <p>“We booked for our corporate event. Everything was seamless and professional.”</p>
-            <h6 class="fw-bold text-primary">- Rahul Verma</h6>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card shadow border-0">
-          <div class="card-body">
-            <p>“The best food experience ever! Highly recommend Chef Booking to everyone.”</p>
-            <h6 class="fw-bold text-primary">- Ananya Gupta</h6>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CALL TO ACTION -->
-<section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #ff512f, #dd2476);">
-  <div class="container">
-    <h2 class="fw-bold mb-3">🚀 Ready to Book Your Chef?</h2>
-    <p class="lead mb-4">Find the perfect chef for your next event today.</p>
-    <a href="{% url 'chef_list' %}" class="btn btn-light btn-lg px-4 py-2">Book Now</a>
-  </div>
-</section>
-
 {% endblock %}

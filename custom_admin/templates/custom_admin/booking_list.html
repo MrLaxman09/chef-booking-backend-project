@@ -1,36 +1,85 @@
 {% extends "custom_admin/base.html" %}
 {% block title %}Bookings{% endblock %}
 {% block content %}
-<h3>Bookings</h3>
+<section class="page-card p-4 mb-4 d-flex flex-wrap justify-content-between align-items-end gap-3">
+  <div>
+    <h2 class="section-title mb-1">Manage Bookings</h2>
+    <p class="section-subtitle mb-0">Keep active bookings clean and archive past records safely.</p>
+  </div>
+  <form method="get" class="d-flex gap-2 flex-wrap" style="max-width:700px; width:100%;">
+    <input name="q" value="{{ q }}" class="form-control" placeholder="Search by customer, chef, or status" style="min-width: 220px;" />
+    <select name="scope" class="form-select" style="max-width: 160px;">
+      <option value="upcoming" {% if scope == 'upcoming' %}selected{% endif %}>Upcoming</option>
+      <option value="past" {% if scope == 'past' %}selected{% endif %}>Past</option>
+      <option value="all" {% if scope == 'all' %}selected{% endif %}>All Active</option>
+      <option value="archived" {% if scope == 'archived' %}selected{% endif %}>Archived</option>
+    </select>
+    <select name="sort" class="form-select" style="max-width: 160px;">
+      <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+      <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
+      <option value="status" {% if sort == 'status' %}selected{% endif %}>Status</option>
+    </select>
+    <button class="btn btn-primary">Apply</button>
+  </form>
+</section>
 
-<form method="get" class="mb-3 d-flex">
-  <input name="q" value="{{ q }}" placeholder="Search by customer or chef" class="form-control me-2">
-  <button class="btn btn-primary">Search</button>
-</form>
+<div class="data-table-wrap">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Customer</th><th>Chef</th><th>Date</th><th>Guests</th><th>Total</th><th>Status</th><th>Timeline</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for b in bookings %}
+      <tr>
+        <td>{{ b.customer.username }}</td>
+        <td>{{ b.chef.name }}</td>
+        <td>{{ b.date }} {{ b.time }}</td>
+        <td>{{ b.person }}</td>
+        <td>INR {{ b.total_price }}</td>
+        <td>
+          {% if not b.is_deleted %}
+          <form method="post" action="{% url 'custom_admin:booking_update_status' b.pk %}" class="d-flex gap-2">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            <select name="status" class="form-select form-select-sm" style="min-width: 130px;">
+              {% for value,label in status_choices %}
+              <option value="{{ value }}" {% if b.status == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn btn-sm btn-outline-primary">Save</button>
+          </form>
+          {% else %}
+          <span class="text-muted">Archived</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if b.is_deleted %}
+          <span class="status-pill status-rejected">Archived</span>
+          {% elif b.is_past %}
+          <span class="status-pill status-pending">Past</span>
+          {% else %}
+          <span class="status-pill status-accepted">Upcoming</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'custom_admin:booking_view' b.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+          {% if not b.is_deleted %}
+          <form method="post" action="{% url 'custom_admin:booking_cancel' b.pk %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            <button class="btn btn-sm btn-outline-warning" type="submit">Cancel</button>
+          </form>
+          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-action="{% url 'custom_admin:booking_delete' b.pk %}" data-name="booking #{{ b.pk }}">Archive</button>
+          {% else %}
+          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-action="{% url 'custom_admin:booking_hard_delete' b.pk %}" data-name="booking #{{ b.pk }}">Delete Permanently</button>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8">No bookings found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-<table class="table">
-  <thead class="table-light"><tr><th>Customer</th><th>Chef</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
-  <tbody>
-    {% for b in bookings %}
-    <tr>
-      <td>{{ b.customer.username }}</td>
-      <td>{{ b.chef.name }}</td>
-      <td>{{ b.date }}</td>
-      <td>{{ b.status }}</td>
-      <td>
-        <a href="{% url 'custom_admin:booking_view' b.pk %}" class="btn btn-sm btn-info">View</a>
-        <a href="{% url 'custom_admin:booking_delete' b.pk %}" class="btn btn-sm btn-danger">Delete</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<nav>
-  <ul class="pagination">
-    {% if bookings.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ bookings.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">Prev</a></li>{% endif %}
-    <li class="page-item disabled"><span class="page-link">Page {{ bookings.number }} of {{ bookings.paginator.num_pages }}</span></li>
-    {% if bookings.has_next %}<li class="page-item"><a class="page-link" href="?page={{ bookings.next_page_number }}{% if q %}&q={{ q }}{% endif %}">Next</a></li>{% endif %}
-  </ul>
-</nav>
+{% include "custom_admin/partials/pagination.html" with page_obj=bookings q=q sort=sort scope=scope %}
+{% include "custom_admin/partials/delete_modal.html" %}
 {% endblock %}
